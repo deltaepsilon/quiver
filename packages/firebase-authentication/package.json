@@ -1,0 +1,38 @@
+{
+  "private": true,
+  "name": "@quiver/firebase-authentication",
+  "version": "0.0.0",
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": {
+    "watch": "webpack --watch",
+    "build": "webpack",
+    "serve": "webpack-dev-server",
+    "dev": "webpack --watch",
+    "lint": "eslint src"
+  },
+  "eslintConfig": {
+    "extends": "eslint-config-synacor"
+  },
+  "eslintIgnore": [
+    "build/*"
+  ],
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-preact": "^1.1.0",
+    "eslint": "^4.5.0",
+    "eslint-config-synacor": "^1.1.0",
+    "if-env": "^1.0.0",
+    "preact-cli": "^2.0.0",
+    "preact-custom-element": "^2.0.0",
+    "source-map-loader": "^0.2.3",
+    "webpack-dev-server": "^2.9.4"
+  },
+  "dependencies": {
+    "preact": "^8.2.1",
+    "preact-compat": "^3.17.0",
+    "webpack": "^3.8.1"
+  }
+}

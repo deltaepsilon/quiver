@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Firebase Authentication</title>
+
+  <script src="node_modules/preact/dist/preact.min.js"></script>
+  <script src="index.js"></script>
+
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      min-height: 100vh;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(100px, 1fr);
+      grid-gap: 1rem;
+    }
+
+    .card {
+      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12),
+      0 3px 1px -2px rgba(0, 0, 0, 0.2);
+
+      padding: 1rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="grid">
+
+    <div class="card">
+      <firebase-authentication email />
+    </div>
+
+    <div class="card">
+      <firebase-authentication phone/>
+    </div>
+
+    <div class="card">
+      <firebase-authentication google/>
+    </div>
+
+    <div class="card">
+      <firebase-authentication facebook />
+    </div>
+
+    <div class="card">
+      <firebase-authentication twitter />
+    </div>
+
+    <div class="card">
+      <firebase-authentication github />
+    </div>   
+
+    <div class="card">
+      <firebase-authentication email phone google facebook twitter github anonymous />
+    </div>
+
+  </div>
+</body>
+
+</html>
