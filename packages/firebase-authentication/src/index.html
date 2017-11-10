@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Stencil Starter App</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
+  <meta name="theme-color" content="#16161d">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <script src="/build/app.js"></script>
+
+  <link rel="apple-touch-icon" href="/assets/icon/icon.png">
+  <link rel="icon" type="image/x-icon" href="/assets/icon/favicon.ico">
+  <link rel="manifest" href="/manifest.json">
+
+  <script src="https://quiver-two.firebaseapp.com/__/firebase/4.6.1/firebase-app.js"></script>
+  <script src="https://quiver-two.firebaseapp.com/__/firebase/4.6.1/firebase-auth.js"></script>
+  <script src="https://quiver-two.firebaseapp.com/__/firebase/init.js"></script>
+
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    mdl-material {
+      max-width: 40rem;
+      margin: 1rem;
+    }
+  </style>
+</head>
+
+<body>
+
+
+  <mdl-material elevation="1" padding>
+    <firebase-authentication email></firebase-authentication>
+  </mdl-material>
+
+  <mdl-material elevation="1" padding>
+    <firebase-authentication phone></firebase-authentication>
+  </mdl-material>
+
+  <mdl-material elevation="1" padding>
+    <firebase-authentication google></firebase-authentication>
+  </mdl-material>
+
+  <mdl-material elevation="1" padding>
+    <firebase-authentication facebook></firebase-authentication>
+  </mdl-material>
+
+  <mdl-material elevation="1" padding>
+    <firebase-authentication twitter></firebase-authentication>
+  </mdl-material>
+
+  <mdl-material elevation="1" padding>
+    <firebase-authentication github></firebase-authentication>
+  </mdl-material>
+
+  <mdl-material elevation="1" padding>
+    <firebase-authentication anonymous></firebase-authentication>
+  </mdl-material>
+
+  <mdl-material elevation="1" padding>
+    <firebase-authentication email phone google facebook twitter github></firebase-authentication>
+  </mdl-material>
+
+</body>
+
+</html>

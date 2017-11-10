@@ -1,38 +1,52 @@
 {
+  "name": "@stencil/starter",
   "private": true,
-  "name": "@quiver/firebase-authentication",
-  "version": "0.0.0",
-  "license": "MIT",
-  "main": "index.js",
-  "scripts": {
-    "watch": "webpack --watch",
-    "build": "webpack",
-    "serve": "webpack-dev-server",
-    "dev": "webpack --watch",
-    "lint": "eslint src"
-  },
-  "eslintConfig": {
-    "extends": "eslint-config-synacor"
-  },
-  "eslintIgnore": [
-    "build/*"
+  "version": "0.0.1",
+  "description": "Stencil App Starter",
+  "files": [
+    "dist/"
   ],
-  "devDependencies": {
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
-    "babel-preset-env": "^1.6.1",
-    "babel-preset-preact": "^1.1.0",
-    "eslint": "^4.5.0",
-    "eslint-config-synacor": "^1.1.0",
-    "if-env": "^1.0.0",
-    "preact-cli": "^2.0.0",
-    "preact-custom-element": "^2.0.0",
-    "source-map-loader": "^0.2.3",
-    "webpack-dev-server": "^2.9.4"
+  "scripts": {
+    "build": "stencil build --prerender",
+    "dev": "sd concurrent \"stencil build --dev --watch\" \"stencil-dev-server\" ",
+    "serve": "stencil-dev-server",
+    "start": "npm run dev",
+    "test": "jest --no-cache",
+    "test.watch": "jest --watch --no-cache"
   },
   "dependencies": {
-    "preact": "^8.2.1",
-    "preact-compat": "^3.17.0",
-    "webpack": "^3.8.1"
+    "@material/button": "^0.24.0",
+    "@material/elevation": "^0.1.13",
+    "@stencil/core": "next",
+    "@stencil/router": "latest"
+  },
+  "devDependencies": {
+    "@stencil/dev-server": "latest",
+    "@stencil/utils": "latest",
+    "@types/jest": "^21.1.1",
+    "jest": "^21.2.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ionic-team/stencil-app-starter.git"
+  },
+  "author": "Ionic Team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ionic-team/stencil"
+  },
+  "homepage": "https://github.com/ionic-team/stencil",
+  "jest": {
+    "transform": {
+      "^.+\\.(ts|tsx)$": "<rootDir>/node_modules/@stencil/core/testing/jest.preprocessor.js"
+    },
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(tsx?|jsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "json",
+      "jsx"
+    ]
   }
 }
