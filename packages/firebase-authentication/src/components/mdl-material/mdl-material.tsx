@@ -2,20 +2,27 @@ import { Component, Prop } from '@stencil/core';
 
 @Component({
   tag: 'mdl-material',
-  styleUrl: 'mdl-material.scss'
+  styleUrl: 'mdl-material.scss',
 })
 export class MDLMaterial {
   @Prop() elevation: number;
-  
+
+  // Classes
   @Prop() transition: boolean;
-  
   @Prop() padding: boolean;
 
+  get classesMap() {
+    return new Map([
+      ['mdc-elevation-transition', this.transition],
+      ['padding', this.padding],
+    ]);
+  }
+
   render() {
-    let classText = `mdc-elevation--z${this.elevation}`;
+    let classNames = `mdc-elevation--z${this.elevation} ` + this.classes;
 
     if (this.transition) {
-      classText += ' mdc-elevation-transition'
+      classText += ' mdc-elevation-transition';
     }
 
     if (this.padding) {

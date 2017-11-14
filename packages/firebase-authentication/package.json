@@ -1,8 +1,8 @@
 {
-  "name": "@stencil/starter",
-  "private": true,
-  "version": "0.0.1",
-  "description": "Stencil App Starter",
+  "name": "@quiver/firebase-authentication",
+  "private": false,
+  "version": "0.0.0",
+  "description": "Firebase Authentication",
   "files": [
     "dist/"
   ],
@@ -15,7 +15,6 @@
     "test.watch": "jest --watch --no-cache"
   },
   "dependencies": {
-    "@material/button": "^0.24.0",
     "@material/elevation": "^0.1.13",
     "@stencil/core": "next",
     "@stencil/router": "latest"
