@@ -21,6 +21,6 @@ module.exports = {
   devServer: {
     contentBase: __dirname,
     compress: false,
-    port: 9000
+    port: 8080
   }
 };

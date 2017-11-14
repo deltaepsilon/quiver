@@ -1,0 +1,7 @@
+@import '../../../node_modules/@material/button/mdc-button.scss';
+
+mdc-button {
+  .icon > i {
+    margin-top: 6px;
+  }
+}

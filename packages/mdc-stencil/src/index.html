@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Stencil Starter App</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
+  <meta name="theme-color" content="#16161d">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <script src="/build/app.js"></script>
+
+  <link rel="apple-touch-icon" href="/assets/icon/icon.png">
+  <link rel="icon" type="image/x-icon" href="/assets/icon/favicon.ico">
+  <link rel="manifest" href="/manifest.json">
+
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    body {
+      padding: 0 1rem;
+    }
+
+    body > * {
+      padding: 1rem 0;
+    }
+
+    .layout {
+      display: grid;
+    }
+
+    .horizontal {
+      grid-gap: 1rem;
+      grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="layout horizontal">
+    <div>
+      <mdc-button raised>Raised</mdc-button>
+    </div>
+    <mdc-button disabled>Disabled</mdc-button>
+    <mdc-button icon>
+      <i class="material-icons mdc-button__icon">favorite</i>
+      Icon Button
+    </mdc-button>
+    <mdc-button raised>Raised</mdc-button>
+    <mdc-button unelevated>Unelevated</mdc-button>
+    <mdc-button stroked>Stroked</mdc-button>
+    <mdc-button dense>Dense</mdc-button>
+    <mdc-button compact>Compact</mdc-button>
+    <mdc-button ripple>Ripple</mdc-button>
+  </div>
+
+  <mdc-material elevation="1" padding>Padded with elevation of 1</mdc-material>
+
+</body>
+
+</html>
