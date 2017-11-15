@@ -1,11 +1,11 @@
 {
   "plugins": [
     // "transform-es2015-classes",
-    // ["transform-builtin-classes", { "globals": ["HTMLElement"] }]
+    ["transform-builtin-classes", { "globals": ["HTMLElement"] }]
   ],
   "presets": [["@babel/env", {
     "targets": {
-      "browsers": ["Chrome 62"]
+      "browsers": ["ie 11"]
     }
   }]]
 }

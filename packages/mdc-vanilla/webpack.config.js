@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MinifyPlugin = require('babel-minify-webpack-plugin');
+
 console.log(path.resolve(__dirname, ''));
 module.exports = {
   entry: {
@@ -26,8 +27,8 @@ module.exports = {
           {
             loader: 'css-loader',
             options: {
-              minimize: true
-            }
+              minimize: true,
+            },
           },
           {
             loader: 'sass-loader', // compiles Sass to CSS
@@ -39,9 +40,7 @@ module.exports = {
       },
     ],
   },
-  // plugins: [new HtmlWebpackPlugin({
-  //   template: 'index.html'
-  // })],
+  plugins: [new MinifyPlugin()],
   devServer: {
     contentBase: __dirname,
     compress: false,
