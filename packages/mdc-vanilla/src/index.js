@@ -1,0 +1,1 @@
+import './elements/mdc-material/mdc-material';
