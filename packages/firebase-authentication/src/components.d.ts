@@ -4,135 +4,43 @@
  * and imports for stencil collections that might be configured in your stencil.config.js file
  */
 
-import '@stencil/router';
+import '@quiver/mdc-button';
 
-import { FirebaseAuthentication as FirebaseAuthentication } from './components/firebase-authentication/firebase-authentication';
+import '@quiver/mdc-material';
 
-interface HTMLFirebaseAuthenticationElement extends FirebaseAuthentication, HTMLElement {
-}
-declare var HTMLFirebaseAuthenticationElement: {
-  prototype: HTMLFirebaseAuthenticationElement;
-  new (): HTMLFirebaseAuthenticationElement;
-};
+
+import {
+  MDCButton as FirebaseAuthentication
+} from './components/firebase-authentication/firebase-authentication';
+
 declare global {
+  interface HTMLFirebaseAuthenticationElement extends FirebaseAuthentication, HTMLElement {
+  }
+  var HTMLFirebaseAuthenticationElement: {
+    prototype: HTMLFirebaseAuthenticationElement;
+    new (): HTMLFirebaseAuthenticationElement;
+  };
   interface HTMLElementTagNameMap {
-      "firebase-authentication": HTMLFirebaseAuthenticationElement;
+    "firebase-authentication": HTMLFirebaseAuthenticationElement;
   }
   interface ElementTagNameMap {
-      "firebase-authentication": HTMLFirebaseAuthenticationElement;
+    "firebase-authentication": HTMLFirebaseAuthenticationElement;
   }
   namespace JSX {
-      interface IntrinsicElements {
-          "firebase-authentication": JSXElements.FirebaseAuthenticationAttributes;
-      }
+    interface IntrinsicElements {
+      "firebase-authentication": JSXElements.FirebaseAuthenticationAttributes;
+    }
   }
   namespace JSXElements {
-      export interface FirebaseAuthenticationAttributes extends HTMLAttributes {
-          mode?: string,
-          color?: string,
-        
-          email?: boolean,
-          phone?: boolean,
-          google?: boolean,
-          facebook?: boolean,
-          twitter?: boolean,
-          github?: boolean,
-          anonymous?: boolean
-      }
-  }
-}
-
-import { MDLButton as MdlButton } from './components/mdl-button/mdl-button';
-
-interface HTMLMdlButtonElement extends MdlButton, HTMLElement {
-}
-declare var HTMLMdlButtonElement: {
-  prototype: HTMLMdlButtonElement;
-  new (): HTMLMdlButtonElement;
-};
-declare global {
-  interface HTMLElementTagNameMap {
-      "mdl-button": HTMLMdlButtonElement;
-  }
-  interface ElementTagNameMap {
-      "mdl-button": HTMLMdlButtonElement;
-  }
-  namespace JSX {
-      interface IntrinsicElements {
-          "mdl-button": JSXElements.MdlButtonAttributes;
-      }
-  }
-  namespace JSXElements {
-      export interface MdlButtonAttributes extends HTMLAttributes {
-          mode?: string,
-          color?: string,
-        
-          raised?: boolean,
-          ripple?: boolean
-      }
-  }
-}
-
-import { MDLMaterial as MdlMaterial } from './components/mdl-material/mdl-material';
-
-interface HTMLMdlMaterialElement extends MdlMaterial, HTMLElement {
-}
-declare var HTMLMdlMaterialElement: {
-  prototype: HTMLMdlMaterialElement;
-  new (): HTMLMdlMaterialElement;
-};
-declare global {
-  interface HTMLElementTagNameMap {
-      "mdl-material": HTMLMdlMaterialElement;
-  }
-  interface ElementTagNameMap {
-      "mdl-material": HTMLMdlMaterialElement;
-  }
-  namespace JSX {
-      interface IntrinsicElements {
-          "mdl-material": JSXElements.MdlMaterialAttributes;
-      }
-  }
-  namespace JSXElements {
-      export interface MdlMaterialAttributes extends HTMLAttributes {
-          mode?: string,
-          color?: string,
-        
-          elevation?: number,
-          transition?: boolean,
-          padding?: boolean
-      }
-  }
-}
-
-import { MyName as MyName } from './components/my-name/my-name';
-
-interface HTMLMyNameElement extends MyName, HTMLElement {
-}
-declare var HTMLMyNameElement: {
-  prototype: HTMLMyNameElement;
-  new (): HTMLMyNameElement;
-};
-declare global {
-  interface HTMLElementTagNameMap {
-      "my-name": HTMLMyNameElement;
-  }
-  interface ElementTagNameMap {
-      "my-name": HTMLMyNameElement;
-  }
-  namespace JSX {
-      interface IntrinsicElements {
-          "my-name": JSXElements.MyNameAttributes;
-      }
-  }
-  namespace JSXElements {
-      export interface MyNameAttributes extends HTMLAttributes {
-          mode?: string,
-          color?: string,
-        
-          first?: string,
-          last?: string
-      }
+    export interface FirebaseAuthenticationAttributes extends HTMLAttributes {
+      
+        email?: boolean,
+        phone?: boolean,
+        google?: boolean,
+        facebook?: boolean,
+        twitter?: boolean,
+        github?: boolean
+    }
   }
 }
 

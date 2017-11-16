@@ -1,6 +1,8 @@
 exports.config = {
-  bundles: [{ components: ['mdl-material'] }, { components: ['firebase-authentication'] }],
-  collections: [{ name: '@stencil/router' }],
+  namespace: 'firebase-authentication',
+  generateDistribution: true,
+  bundles: [{ components: ['firebase-authentication'] }],
+  collections: [{ name: '@quiver/mdc-button' }, { name: '@quiver/mdc-material' }],
   sassConfig: {
     includePaths: ['node_modules'],
   },

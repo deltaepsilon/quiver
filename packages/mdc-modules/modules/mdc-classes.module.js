@@ -1,6 +1,16 @@
+export function getClassesFromMap(map) {
+  const classes = [];
+  map.forEach((value, className) => {
+    if (value) {
+      classes.push(className);
+    }
+  });
+  return classes.join(' ');
+}
+
 export function MDCClassesMixin(superclass = class Superclass {}) {
   return class MDCClasses extends superclass {
-    get classesMap(): Map<String, Boolean> {
+    get classesMap() {
       return new Map();
     }
 

@@ -1,13 +1,16 @@
 {
   "name": "@quiver/firebase-authentication",
-  "private": false,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Firebase Authentication",
+  "main": "dist/collection/index.js",
+  "types": "dist/collection/index.d.ts",
+  "collection": "dist/collection/collection-manifest.json",
   "files": [
     "dist/"
   ],
+  "browser": "dist/firebase-authentication.js",
   "scripts": {
-    "build": "stencil build --prerender",
+    "build": "stencil build",
     "dev": "sd concurrent \"stencil build --dev --watch\" \"stencil-dev-server\" ",
     "serve": "stencil-dev-server",
     "start": "npm run dev",
@@ -15,9 +18,9 @@
     "test.watch": "jest --watch --no-cache"
   },
   "dependencies": {
-    "@material/elevation": "^0.1.13",
-    "@stencil/core": "next",
-    "@stencil/router": "latest"
+    "@material/button": "^0.25.0",
+    "@material/elevation": "^0.25.0",
+    "@stencil/core": "next"
   },
   "devDependencies": {
     "@stencil/dev-server": "latest",
@@ -25,16 +28,8 @@
     "@types/jest": "^21.1.1",
     "jest": "^21.2.1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ionic-team/stencil-app-starter.git"
-  },
-  "author": "Ionic Team",
+  "author": "Chris Esplin <chris@chrisesplin.com>",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/ionic-team/stencil"
-  },
-  "homepage": "https://github.com/ionic-team/stencil",
   "jest": {
     "transform": {
       "^.+\\.(ts|tsx)$": "<rootDir>/node_modules/@stencil/core/testing/jest.preprocessor.js"
