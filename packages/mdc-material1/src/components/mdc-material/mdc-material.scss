@@ -1,0 +1,9 @@
+@import '@material/elevation/mdc-elevation.scss';
+
+mdc-material {
+  display: block;
+  
+  .padding {
+    padding: 1rem;
+  }
+}

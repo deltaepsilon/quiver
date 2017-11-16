@@ -1,0 +1,11 @@
+@import '@material/button/mdc-button.scss';
+
+mdc-button {
+  .icon > i {
+    margin-top: 6px;
+  }
+
+  button {
+    width: 100%;
+  }
+}
