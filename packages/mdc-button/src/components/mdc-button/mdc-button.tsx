@@ -9,7 +9,6 @@ import { getClassesFromMap } from '@quiver/mdc-modules';
 })
 export class MDCButton {
   // Classes
-  @Prop() icon: boolean;
   @Prop() raised: boolean;
   @Prop() unelevated: boolean;
   @Prop() stroked: boolean;
@@ -19,6 +18,7 @@ export class MDCButton {
   // Functionality
   @Prop() disabled: boolean;
   @Prop() ripple: boolean;
+  @Prop() icon: String;
 
   get button() {
     return this['__el'].querySelector('button');
@@ -31,7 +31,6 @@ export class MDCButton {
   get classesMap(): Map<String, Boolean> {
     return new Map([
       ['mdc-button', true],
-      ['icon', this.icon],
       ['mdc-button--raised', this.raised],
       ['mdc-button--unelevated', this.unelevated],
       ['mdc-button--stroked', this.stroked],
@@ -53,7 +52,16 @@ export class MDCButton {
         disabled={this.disabled}
         data-mdc-auto-init={this.ripple ? 'MDCRipple' : null}
       >
-        <slot />
+        <div class="mdc-button-inner-wrapper">
+          {!!this.icon ? (
+            <i class="mdc-button-icon material-icons mdc-button__icon">{this.icon}</i>
+          ) : (
+            <i class="mdc-button-icon" />
+          )}
+          <span class="mdc-button-slot">
+            <slot />
+          </span>
+        </div>
       </button>
     );
   }

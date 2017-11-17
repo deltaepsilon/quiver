@@ -7,5 +7,15 @@ mdc-button {
 
   button {
     width: 100%;
+
+    .mdc-button-inner-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .mdc-button__icon {
+      margin-top: -7px;
+    }
   }
 }

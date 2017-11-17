@@ -30,14 +30,14 @@ declare global {
   namespace JSXElements {
     export interface MdcButtonAttributes extends HTMLAttributes {
       
-        icon?: boolean,
         raised?: boolean,
         unelevated?: boolean,
         stroked?: boolean,
         dense?: boolean,
         compact?: boolean,
         disabled?: boolean,
-        ripple?: boolean
+        ripple?: boolean,
+        icon?: String
     }
   }
 }

@@ -18,12 +18,12 @@ export class MDCButton {
     return (
       <div id="firebase-authentication">
         {!!this.email && (
-          <mdc-button class="email" raised>
+          <mdc-button icon="send" raised>
             Email/Password
           </mdc-button>
         )}
         {!!this.phone && (
-          <mdc-button class="phone" raised>
+          <mdc-button icon="phone" raised>
             Phone
           </mdc-button>
         )}
