@@ -6,7 +6,7 @@ import { findParent } from '@quiver/mdc-modules';
   styleUrl: 'firebase-authentication.scss',
   shadow: true,
 })
-export class MDCButton {
+export class FirebaseAuthentication {
   constructor() {
     if (!this.view) {
       this.view = 'loginOptions';
@@ -105,8 +105,8 @@ export class MDCButton {
   get inputEmailTemplate() {
     return (
       <div id="firebase-authentication" onClick={(e: UIEvent) => this.handleClick(e)}>
-        <input type="text" placeholder="Email" />
-        <mdc-button class="emailNext" raised>
+        <mdc-text-field label="Email" />
+        <mdc-button class="emailNext" icon="forward" raised>
           Next
         </mdc-button>
       </div>

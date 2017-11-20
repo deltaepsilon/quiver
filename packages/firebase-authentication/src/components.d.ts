@@ -8,9 +8,11 @@ import '@quiver/mdc-button';
 
 import '@quiver/mdc-material';
 
+import '@quiver/mdc-text-field';
+
 
 import {
-  MDCButton as FirebaseAuthentication
+  FirebaseAuthentication as FirebaseAuthentication
 } from './components/firebase-authentication/firebase-authentication';
 
 declare global {

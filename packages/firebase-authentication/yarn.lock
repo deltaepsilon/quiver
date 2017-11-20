@@ -33,6 +33,21 @@
     "@material/base" "^0.24.0"
     "@material/theme" "^0.25.0"
 
+"@material/rtl@^0.1.8":
+  version "0.1.8"
+  resolved "https://registry.yarnpkg.com/@material/rtl/-/rtl-0.1.8.tgz#2462db15e2d4e041666485559c028382872b01fb"
+
+"@material/textfield@^0.25.0":
+  version "0.25.0"
+  resolved "https://registry.yarnpkg.com/@material/textfield/-/textfield-0.25.0.tgz#93f059495bb5d07678f209ee0f654ca3fef3bad9"
+  dependencies:
+    "@material/animation" "^0.25.0"
+    "@material/base" "^0.24.0"
+    "@material/ripple" "^0.25.0"
+    "@material/rtl" "^0.1.8"
+    "@material/theme" "^0.25.0"
+    "@material/typography" "^0.3.0"
+
 "@material/theme@^0.25.0":
   version "0.25.0"
   resolved "https://registry.yarnpkg.com/@material/theme/-/theme-0.25.0.tgz#707b4c61ebc62e662d36164c8dd45fcf98bb1444"

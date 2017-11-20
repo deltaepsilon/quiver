@@ -1,14 +1,14 @@
 {
-  "name": "@quiver/mdc-button",
+  "name": "@quiver/mdc-text-field",
   "version": "0.0.0",
-  "description": "MDC Button",
+  "description": "MDC Text Field",
   "main": "dist/collection/index.js",
   "types": "dist/collection/index.d.ts",
   "collection": "dist/collection/collection-manifest.json",
   "files": [
     "dist/"
   ],
-  "browser": "dist/mdc-button.js",
+  "browser": "dist/mdc-text-field.js",
   "scripts": {
     "build": "stencil build",
     "dev": "sd concurrent \"stencil build --dev --watch\" \"stencil-dev-server\" ",
@@ -17,11 +17,9 @@
     "test": "jest --no-cache",
     "test.watch": "jest --watch --no-cache"
   },
-  "dependencies": {
-    "@material/button": "^0.25.0",
-    "@stencil/core": "next"
-  },
   "devDependencies": {
+    "@material/textfield": "^0.25.0",
+    "@stencil/core": "next",
     "@stencil/dev-server": "latest",
     "@stencil/utils": "latest",
     "@types/jest": "^21.1.1",
@@ -41,5 +39,8 @@
       "json",
       "jsx"
     ]
+  },
+  "dependencies": {
+    "@material/textfield": "^0.25.0"
   }
 }

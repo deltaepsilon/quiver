@@ -1,0 +1,11 @@
+@import '@material/textfield/mdc-text-field.scss';
+
+#mdcTextField {
+  .mdc-text-field__input:focus ~ .mdc-text-field-helper-text {
+    display: none;
+  }
+  
+  .mdc-text-field__input:focus ~ .mdc-text-field-helper-text--persistent {
+    display: inherit !important;
+  }
+}
