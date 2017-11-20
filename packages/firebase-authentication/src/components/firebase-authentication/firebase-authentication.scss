@@ -24,13 +24,19 @@
     margin: 0.5rem 0;
   
     button {
-      font-size: calc(1rem - 0.2vmax);
+      font-size: calc(.7rem + 0.2vmax);
     }
     
     .mdc-button-icon {
       margin-right: 0px;
       display: block;
       min-width: 1rem;
+    }
+
+    .mdc-button-img[src] {
+      max-height: 20px;
+      margin-left: -14px;
+      margin-right: -5px;
     }
     
     .mdc-button-inner-wrapper {
@@ -40,6 +46,37 @@
     .mdc-button-slot {
       display: block;
       margin-left: 1rem;
+      white-space: nowrap;
+    }
+
+    &.email button {
+      background: #cd0e22;
+      color: white;
+    }
+
+    &.phone button {
+      background: #4f8fde;
+      color: white;
+    }
+
+    &.google button {
+      background: white;
+      color: black;
+    }
+
+    &.facebook button {
+      background: #3B5998;
+      color: white;
+    }
+
+    &.twitter button {
+      background: #00aced;
+      color: white;
+    }
+
+    &.github button {
+      background: black;
+
     }
   }
   

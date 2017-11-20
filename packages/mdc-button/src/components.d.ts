@@ -37,7 +37,8 @@ declare global {
         compact?: boolean,
         disabled?: boolean,
         ripple?: boolean,
-        icon?: String
+        icon?: string,
+        src?: string
     }
   }
 }

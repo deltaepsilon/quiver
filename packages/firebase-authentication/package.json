@@ -10,10 +10,10 @@
   ],
   "browser": "dist/firebase-authentication.js",
   "scripts": {
-    "build": "stencil build",
+    "build": "rm -f *.sc.js && rm -rf www/assets && stencil build",
     "dev": "sd concurrent \"stencil build --dev --watch\" \"stencil-dev-server\" ",
     "serve": "stencil-dev-server",
-    "start": "npm run dev",
+    "start": "rm -rf www/assets && npm run dev",
     "test": "jest --no-cache",
     "test.watch": "jest --watch --no-cache"
   },

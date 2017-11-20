@@ -9,6 +9,7 @@ mdc-button {
     width: 100%;
 
     .mdc-button-inner-wrapper {
+      position: relative;
       display: flex;
       justify-content: center;
       align-items: center;

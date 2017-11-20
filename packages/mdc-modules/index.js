@@ -1,1 +1,2 @@
-export * from './modules/mdc-classes.module';
+export * from './modules/classes.module';
+export * from './modules/utilities.module';

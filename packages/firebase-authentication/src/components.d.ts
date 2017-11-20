@@ -39,7 +39,8 @@ declare global {
         google?: boolean,
         facebook?: boolean,
         twitter?: boolean,
-        github?: boolean
+        github?: boolean,
+        redirect?: boolean
     }
   }
 }

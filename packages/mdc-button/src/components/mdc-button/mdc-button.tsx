@@ -18,7 +18,8 @@ export class MDCButton {
   // Functionality
   @Prop() disabled: boolean;
   @Prop() ripple: boolean;
-  @Prop() icon: String;
+  @Prop() icon: string;
+  @Prop() src: string;
 
   get button() {
     return this['__el'].querySelector('button');
@@ -57,6 +58,11 @@ export class MDCButton {
             <i class="mdc-button-icon material-icons mdc-button__icon">{this.icon}</i>
           ) : (
             <i class="mdc-button-icon" />
+          )}
+          {!!this.src ? (
+            <img class="mdc-button-img" src={this.src} />
+          ) : (
+            <img class="mdc-button-img" />
           )}
           <span class="mdc-button-slot">
             <slot />

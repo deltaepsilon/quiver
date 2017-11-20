@@ -1,0 +1,43 @@
+{
+  "components": [
+    {
+      "tag": "mdc-material",
+      "componentClass": "MDCMaterial",
+      "componentPath": "components/mdc-material/mdc-material.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/mdc-material/mdc-material.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "elevation",
+          "type": "number"
+        },
+        {
+          "name": "padding",
+          "type": "boolean"
+        },
+        {
+          "name": "transition",
+          "type": "boolean"
+        }
+      ],
+      "slot": "hasSlots"
+    }
+  ],
+  "bundles": [
+    {
+      "components": [
+        "mdc-material"
+      ]
+    }
+  ],
+  "compiler": {
+    "name": "@stencil/core",
+    "version": "0.0.8-5",
+    "typescriptVersion": "2.6.1"
+  }
+}
