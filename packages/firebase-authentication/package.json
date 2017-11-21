@@ -27,6 +27,7 @@
     "sass-loader": "^6.0.6"
   },
   "dependencies": {
+    "email-validator": "^1.1.1",
     "linkstate": "^1.1.0",
     "preact": "^8.2.1",
     "preact-compat": "^3.17.0",

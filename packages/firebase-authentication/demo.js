@@ -6,6 +6,16 @@ import { Component } from 'preact';
 import './demo.css';
 
 export default class App extends Component {
+  componentDidMount() {
+    addEventListener('currentUserChanged', e => {
+      // console.log('currentUserChanged', e);
+    });
+    
+    addEventListener('currentUserDeleted', e => {
+      // console.log('currentUserDeleted', e);
+    });
+  }
+
   render() {
     const loginMethods = ['email', 'phone', 'google', 'facebook', 'twitter', 'github'];
     const cards = loginMethods.map(method => {
@@ -21,10 +31,11 @@ export default class App extends Component {
         </Card>
       );
     });
-    return <div class="demo">
-      {cards}
+    return (
+      <div class="demo">
+        {cards}
 
-      <Card z="1" padding>
+        <Card z="1" padding>
           <Card.Primary>
             <Card.Title>
               <h2>Kitchen Sink</h2>
@@ -32,6 +43,7 @@ export default class App extends Component {
             <FirebaseAuthentication {...loginMethods} />
           </Card.Primary>
         </Card>
-      </div>;
+      </div>
+    );
   }
 }
