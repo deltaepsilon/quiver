@@ -1,0 +1,74 @@
+{
+  "namespace": "mdc-button",
+  "components": [
+    [
+      "mdc-button",
+      [
+        "x7th1fdm",
+        "crzbfkun"
+      ],
+      1,
+      [
+        [
+          "compact",
+          1,
+          1,
+          3
+        ],
+        [
+          "dense",
+          1,
+          1,
+          3
+        ],
+        [
+          "disabled",
+          1,
+          1,
+          3
+        ],
+        [
+          "icon",
+          1,
+          1,
+          2
+        ],
+        [
+          "raised",
+          1,
+          1,
+          3
+        ],
+        [
+          "ripple",
+          1,
+          1,
+          3
+        ],
+        [
+          "src",
+          1,
+          1,
+          2
+        ],
+        [
+          "stroked",
+          1,
+          1,
+          3
+        ],
+        [
+          "unelevated",
+          1,
+          1,
+          3
+        ]
+      ],
+      0,
+      1
+    ]
+  ],
+  "core": "mdc-button.510fb3wq.js",
+  "coreSsr": "mdc-button.eylllxg8.js",
+  "corePolyfilled": "mdc-button.srllxaxc.js"
+}

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
+  <title>MDC Button</title>
+  <script src="/build/mdc-button.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> 
+
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 90vh;
+    }
+
+    #wrapper {
+      display: flex;
+      flex-direction: column;
+      max-width: 20rem;
+    }
+
+    mdc-button {
+      margin: 1rem;
+    }
+
+    .mdc-button-img {
+      max-height: 20px;
+      margin-right: .5rem; 
+    }
+  </style>
+</head>
+<body>
+
+  <div id="wrapper">
+    <mdc-button raised>Button</mdc-button>  
+    <mdc-button unelevated>Unelevated</mdc-button>  
+    <mdc-button stroked>Stroked</mdc-button>  
+    <mdc-button dense>dense</mdc-button>  
+    <mdc-button compact>Compact</mdc-button>  
+    <mdc-button ripple>Ripple</mdc-button>  
+    <mdc-button stroked icon="favorite">Icon</mdc-button>  
+    <mdc-button stroked src="/assets/google-logo.svg">Google</mdc-button>  
+  </div>
+
+
+  <script>
+    if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+      window.addEventListener('load', function(){
+        navigator.serviceWorker.register('/sw.js')
+          .then(function(reg) { console.log('service worker registered', reg) })
+          .catch(function(err) { console.log('service worker error', err) });
+      });
+    }
+  </script>
+
+</body>
+</html>

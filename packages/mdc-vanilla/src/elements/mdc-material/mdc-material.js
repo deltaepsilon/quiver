@@ -1,6 +1,6 @@
 import { LitElement } from '../../lib/lit-element';
 import { html } from 'lit-html';
-import { MDCClassesMixin } from '../../mixins/mdc-classes.mixin';
+// import { MDCClassesMixin } from '../../mixins/mdc-classes.mixin';
 import style from './mdc-material.scss';
 
 class MDCMaterial extends MDCClassesMixin(LitElement) {

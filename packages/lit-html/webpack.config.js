@@ -22,5 +22,6 @@ module.exports = {
     contentBase: __dirname,
     compress: false,
     port: 8080
-  }
+  },
+  devtool: 'source-map'
 };

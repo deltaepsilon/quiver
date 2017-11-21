@@ -1,6 +1,6 @@
 import { html, render } from "lit-html";
 
-const helloTemplate = (name) => html`<div>Hello ${name}!</div>`;
+const helloTemplate = (name) => html`<div>Hello ${name} my friend!</div>`;
 
 // Call the function with some data, and pass the result to render()
 
