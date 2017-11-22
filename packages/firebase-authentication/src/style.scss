@@ -22,7 +22,7 @@
     width: 100%;
   }
 
-  &[view="login-options"] {
+  &[view="login-options"], &[view="logged-in"] {
     button {
       width: 100%;
     }

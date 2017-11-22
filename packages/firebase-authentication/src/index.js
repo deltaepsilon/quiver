@@ -86,7 +86,12 @@ export default class FirebaseAuthentication extends Component {
       this.setState({ autofocusView: view });
       setTimeout(() => {
         const autofocus = this.base.querySelector('[autofocus]');
-        if (autofocus) autofocus.focus();
+        if (autofocus) {
+          autofocus.focus();
+          if (typeof autofocus.select == 'function') {
+            autofocus.select();
+          }
+        }
       });
     }
   }
@@ -114,7 +119,7 @@ export default class FirebaseAuthentication extends Component {
           type={method.type}
           ripple
           raised
-          onClick={() => this.handleButtonClick(method.type)}
+          onClick={() => this.selectLoginOption(method.type)}
         >
           <img src={method.svg} />
           <span>{method.text}</span>
@@ -153,7 +158,13 @@ export default class FirebaseAuthentication extends Component {
 
     return (
       <div>
-        <Textfield label="Email" type="email" autofocus onInput={linkState(this, 'email')} />
+        <Textfield
+          label="Email"
+          type="email"
+          autofocus
+          onInput={linkState(this, 'email')}
+          value={email}
+        />
         <div class="buttons">
           <Button
             type="previous"
@@ -215,7 +226,7 @@ export default class FirebaseAuthentication extends Component {
         <p>Would you like to register a new account?</p>
         <div class="buttons">
           <Button type="previous" ripple onClick={() => this.changeView('input-email')}>
-            Retry Password
+            Back
           </Button>
           <Button type="next" raised ripple onClick={() => this.changeView('register-email')}>
             Register
@@ -294,7 +305,13 @@ export default class FirebaseAuthentication extends Component {
           authentication provider.
         </p>
         <div class="buttons">
-          <Button type="previous" raised ripple onClick={() => this.changeView('login-options')}>
+          <Button
+            type="previous"
+            raised
+            ripple
+            autofocus
+            onClick={() => this.changeView('login-options')}
+          >
             Back
           </Button>
         </div>
@@ -350,13 +367,13 @@ export default class FirebaseAuthentication extends Component {
   }
 
   // Functions
-  handleButtonClick(type) {
-    const loginMethod = this.loginMethodsMap[type];
+  selectLoginOption(type) {
+    const { provider, view } = this.loginMethodsMap[type];
 
-    if (loginMethod.provider) {
-      this.auth.signInWithPopup(loginMethod.provider);
-    } else if (loginMethod.view) {
-      this.changeView(loginMethod.view);
+    if (provider) {
+      this.auth.signInWithPopup(provider);
+    } else if (view) {
+      this.changeView(view);
     }
   }
 
@@ -371,13 +388,11 @@ export default class FirebaseAuthentication extends Component {
   }
 
   fire(type, detail) {
-    let e;
     try {
-      e = new CustomEvent(type, { bubbles: true, detail });
-      dispatchEvent(e);
+      dispatchEvent(new CustomEvent(type, { bubbles: true, detail }));
     } catch (e) {
       // Handle ie11
-      e = document.createEvent('CustomEvent');
+      const e = document.createEvent('CustomEvent');
       e.initEvent(type, true, true, detail);
       document.dispatchEvent(e);
     }
