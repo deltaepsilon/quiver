@@ -392,9 +392,9 @@ export default class FirebaseAuthentication extends Component {
       dispatchEvent(new CustomEvent(type, { bubbles: true, detail }));
     } catch (e) {
       // Handle ie11
-      const e = document.createEvent('CustomEvent');
-      e.initEvent(type, true, true, detail);
-      document.dispatchEvent(e);
+      const event = document.createEvent('CustomEvent');
+      event.initEvent(type, true, true, detail);
+      document.dispatchEvent(event);
     }
   }
 
