@@ -20,15 +20,64 @@ import googleSvg from '../assets/logos/google-logo.svg';
 import twitterSvg from '../assets/logos/twitter-logo.svg';
 
 export default class FirebaseAuthentication extends Component {
+  // Getters
+  get firebase() {
+    return window.firebase;
+  }
+
+  get auth() {
+    return this.firebase.auth();
+  }
+
+  get loginMethodsMap() {
+    const auth = this.firebase.auth;
+    return {
+      email: { text: 'Log In with Email', svg: emailSvg, view: 'input-email' },
+      phone: { text: 'Log in by Phone', svg: phoneSvg, view: 'inputPhone' },
+      facebook: {
+        text: 'Log in with Facebook',
+        svg: facebookSvg,
+        provider: new auth.FacebookAuthProvider(),
+      },
+      github: {
+        text: 'Log in with GitHub',
+        svg: githubSvg,
+        provider: new auth.GithubAuthProvider(),
+      },
+      google: {
+        text: 'Log in with Google',
+        svg: googleSvg,
+        provider: new auth.GoogleAuthProvider(),
+      },
+      twitter: {
+        text: 'Log in with Twitter',
+        svg: twitterSvg,
+        provider: new auth.TwitterAuthProvider(),
+      },
+    };
+  }
+
+  get templatesMap() {
+    return {
+      'logged-in': (props, state) => this.getLoggedInTemplate(state),
+      'login-options': (props, state) => this.getLoginOptionsTemplate(props),
+      'input-email': (props, state) => this.getInputEmailTemplate(state),
+      'input-password': (props, state) => this.getInputPasswordTemplate(state),
+      'prompt-register': (props, state) => this.getPromptRegisterTemplate(state),
+      'register-email': (props, state) => this.getRegisterEmailTemplate(state),
+      'bad-password': (props, state) => this.getBadPasswordTemplate(state),
+      'duplicate-account': (props, state) => this.getDuplicateAccountTemplate(state),
+    };
+  }
+
+  // Lifecycle
   componentWillMount() {
-    this.getFirebase()
-      .auth()
-      .onAuthStateChanged(currentUser => {
-        const view = !!currentUser ? 'logged-in' : 'login-options';
-        this.setState({ view, currentUser });
-        this.clearInputs();
-        this.fire('currentUserChanged', { currentUser });
-      });
+    this.auth.onAuthStateChanged(currentUser => {
+      const view = !!currentUser ? 'logged-in' : 'login-options';
+      this.setState({ view, currentUser });
+      this.clearInputs();
+      this.fire('currentUserChanged', { currentUser });
+    });
   }
 
   componentDidUpdate() {
@@ -45,28 +94,8 @@ export default class FirebaseAuthentication extends Component {
   // Render
   render(props, state) {
     let template;
-    switch (state.view) {
-      case 'logged-in':
-        template = this.getLoggedInTemplate();
-        break;
-      case 'login-options':
-        template = this.getLoginOptionsTemplate(props);
-        break;
-      case 'input-email':
-        template = this.getInputEmailTemplate(state);
-        break;
-      case 'input-password':
-        template = this.getInputPasswordTemplate(state);
-        break;
-      case 'prompt-register':
-        template = this.getPromptRegisterTemplate(state);
-        break;
-      case 'register-email':
-        template = this.getRegisterEmailTemplate(state);
-        break;
-      case 'email-in-use':
-        template = this.getEmailInUseTemplate(state);
-        break;
+    if (this.state.view) {
+      template = this.templatesMap[this.state.view](props, state);
     }
 
     return (
@@ -94,8 +123,17 @@ export default class FirebaseAuthentication extends Component {
     });
   }
 
-  getLoggedInTemplate() {
+  getLoginMethods(props) {
+    return Object.keys(props)
+      .map(x => props[x])
+      .filter(x => typeof x == 'string')
+      .map(type => Object.assign({ type }, this.loginMethodsMap[type]));
+  }
+
+  getLoggedInTemplate({ currentUser }) {
     return [
+      <img class="profile-img" src={currentUser.photoURL} />,
+      <p>{currentUser.email}</p>,
       <Button className="center" ripple raised onClick={() => this.signOut()}>
         Sign Out
       </Button>,
@@ -224,35 +262,104 @@ export default class FirebaseAuthentication extends Component {
     );
   }
 
-  getEmailInUseTemplate({ email }) {
+  getBadPasswordTemplate({ email }) {
     return (
       <div>
         <p>The password for {email} does not match our records.</p>
+        <p>
+          If an account exists under a different authentication provider, you may be able to
+          register a new email/password account.
+        </p>
         <div class="buttons">
           <Button type="previous" ripple onClick={() => this.changeView('input-email')}>
             Back
           </Button>
+          <Button type="next" ripple onClick={() => this.changeView('register-email')}>
+            Register
+          </Button>
           <Button type="next" raised ripple autofocus onClick={() => this.sendPasswordResetEmail()}>
-            Reset Password
+            Reset
           </Button>
         </div>
       </div>
     );
   }
 
-  // Handlers
+  getDuplicateAccountTemplate({ email }) {
+    return (
+      <div>
+        <p>An account already exists for {email}.</p>
+        <p>
+          Multiple accounts for a single email have been disabled. Try logging in with a different
+          authentication provider.
+        </p>
+        <div class="buttons">
+          <Button type="previous" raised ripple onClick={() => this.changeView('login-options')}>
+            Back
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  // Firebase Auth Methods
+  signOut() {
+    this.auth.signOut().catch(error => this.handleError(error));
+  }
+
+  currentUserDelete() {
+    const { currentUser } = this.state;
+    currentUser
+      .delete()
+      .then(() => this.fire('currentUserDeleted', { currentUser }))
+      .catch(error => this.handleError(error));
+  }
+
+  signInWithEmailAndPassword() {
+    const { email, password } = this.state;
+    this.auth.signInWithEmailAndPassword(email, password).catch(error => {
+      if (error.code == 'auth/user-not-found') {
+        this.changeView('prompt-register');
+      } else if (error.code == 'auth/wrong-password') {
+        this.changeView('bad-password');
+      }
+      this.handleError(error);
+    });
+  }
+
+  createUserWithEmailAndPassword() {
+    const { email, password } = this.state;
+    this.auth.createUserWithEmailAndPassword(email, password).catch(error => {
+      if (error.code == 'auth/email-already-in-use') {
+        this.changeView('duplicate-account');
+      }
+      this.handleError(error);
+    });
+  }
+
+  sendPasswordResetEmail() {
+    const { email } = this.state;
+    this.auth
+      .sendPasswordResetEmail(email)
+      .then(() => {
+        this.fire('passwordResetSent', { email });
+        this.clearInputs();
+        this.changeView('input-email');
+      })
+      .catch(error => this.handleError(error));
+  }
+
+  // Functions
   handleButtonClick(type) {
-    const firebase = this.getFirebase();
-    const loginMethod = this.getLoginMethodsMap()[type];
+    const loginMethod = this.loginMethodsMap[type];
 
     if (loginMethod.provider) {
-      firebase.auth().signInWithPopup(loginMethod.provider);
+      this.auth.signInWithPopup(loginMethod.provider);
     } else if (loginMethod.view) {
       this.changeView(loginMethod.view);
     }
   }
 
-  // Functions
   changeView(view) {
     const viewThatNeedClearing = ['input-email', 'login-options'];
     const updates = { view };
@@ -269,6 +376,7 @@ export default class FirebaseAuthentication extends Component {
       e = new CustomEvent(type, { bubbles: true, detail });
       dispatchEvent(e);
     } catch (e) {
+      // Handle ie11
       e = document.createEvent('CustomEvent');
       e.initEvent(type, true, true, detail);
       document.dispatchEvent(e);
@@ -283,21 +391,7 @@ export default class FirebaseAuthentication extends Component {
     this.setState({ email: null, password: null, confirmation: null });
   }
 
-  signOut() {
-    this.getFirebase()
-      .auth()
-      .signOut()
-      .catch(error => this.handleError(error));
-  }
-
-  currentUserDelete() {
-    const { currentUser } = this.state;
-    currentUser
-      .delete()
-      .then(() => this.fire('currentUserDeleted', { currentUser }))
-      .catch(error => this.handleError(error));
-  }
-
+  // Validation
   validateEmail(email) {
     return validate(email);
   }
@@ -308,88 +402,5 @@ export default class FirebaseAuthentication extends Component {
 
   validateConfirmation(password, confirmation) {
     return password == confirmation;
-  }
-
-  signInWithEmailAndPassword() {
-    const { email, password } = this.state;
-    this.getFirebase()
-      .auth()
-      .signInWithEmailAndPassword(email, password)
-      .catch(error => {
-        if (error.code == 'auth/user-not-found') {
-          this.changeView('prompt-register');
-        } else if (error.code == 'auth/wrong-password') {
-          this.changeView('email-in-use');
-        }
-        this.handleError(error);
-      });
-  }
-
-  is;
-
-  createUserWithEmailAndPassword() {
-    const { email, password } = this.state;
-    this.getFirebase()
-      .auth()
-      .createUserWithEmailAndPassword(email, password)
-      .catch(error => {
-        if (error.code == 'auth/email-already-in-use') {
-          this.changeView('email-in-use');
-        }
-        this.handleError(error);
-      });
-  }
-
-  sendPasswordResetEmail() {
-    const { email } = this.state;
-    this.getFirebase()
-      .auth()
-      .sendPasswordResetEmail(email)
-      .then(() => {
-        this.fire('passwordResetSent', { email });
-        this.clearInputs();
-        this.changeView('input-email');
-      })
-      .catch(error => this.handleError(error));
-  }
-
-  // Getters
-  getFirebase() {
-    return window.firebase;
-  }
-
-  getLoginMethodsMap() {
-    const firebase = this.getFirebase();
-    return {
-      email: { text: 'Log In with Email', svg: emailSvg, view: 'input-email' },
-      phone: { text: 'Log in by Phone', svg: phoneSvg, view: 'inputPhone' },
-      facebook: {
-        text: 'Log in with Facebook',
-        svg: facebookSvg,
-        provider: new firebase.auth.FacebookAuthProvider(),
-      },
-      github: {
-        text: 'Log in with GitHub',
-        svg: githubSvg,
-        provider: new firebase.auth.GithubAuthProvider(),
-      },
-      google: {
-        text: 'Log in with Google',
-        svg: googleSvg,
-        provider: new firebase.auth.GoogleAuthProvider(),
-      },
-      twitter: {
-        text: 'Log in with Twitter',
-        svg: twitterSvg,
-        provider: new firebase.auth.TwitterAuthProvider(),
-      },
-    };
-  }
-
-  getLoginMethods(props) {
-    return Object.keys(props)
-      .map(x => props[x])
-      .filter(x => typeof x == 'string')
-      .map(type => Object.assign({ type }, this.getLoginMethodsMap()[type]));
   }
 }
