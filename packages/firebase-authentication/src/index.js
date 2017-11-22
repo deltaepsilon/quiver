@@ -24,27 +24,48 @@ export default class FirebaseAuthentication extends Component {
     this.getFirebase()
       .auth()
       .onAuthStateChanged(currentUser => {
-        const view = !!currentUser ? 'loggedIn' : 'loginOptions';
-        this.setState(Object.assign({}, this.state, { view, currentUser }));
+        const view = !!currentUser ? 'logged-in' : 'login-options';
+        this.setState({ view, currentUser });
+        this.clearInputs();
         this.fire('currentUserChanged', { currentUser });
       });
+  }
+
+  componentDidUpdate() {
+    const { view, autofocusView } = this.state;
+    if (view != autofocusView) {
+      this.setState({ autofocusView: view });
+      setTimeout(() => {
+        const autofocus = this.base.querySelector('[autofocus]');
+        if (autofocus) autofocus.focus();
+      });
+    }
   }
 
   // Render
   render(props, state) {
     let template;
     switch (state.view) {
-      case 'loggedIn':
+      case 'logged-in':
         template = this.getLoggedInTemplate();
         break;
-      case 'loginOptions':
+      case 'login-options':
         template = this.getLoginOptionsTemplate(props);
         break;
-      case 'inputEmail':
+      case 'input-email':
         template = this.getInputEmailTemplate(state);
         break;
-      case 'inputPassword':
+      case 'input-password':
         template = this.getInputPasswordTemplate(state);
+        break;
+      case 'prompt-register':
+        template = this.getPromptRegisterTemplate(state);
+        break;
+      case 'register-email':
+        template = this.getRegisterEmailTemplate(state);
+        break;
+      case 'email-in-use':
+        template = this.getEmailInUseTemplate(state);
         break;
     }
 
@@ -74,38 +95,43 @@ export default class FirebaseAuthentication extends Component {
   }
 
   getLoggedInTemplate() {
-    return (
-      <div>
-        <Button ripple raised onClick={() => this.signOut()}>
-          Sign Out
-        </Button>
-        <Button
-          ripple
-          raised
-          onClick={() => this.changeView('confirmDelete')}
-          className="mdc-theme--secondary-bg"
-        >
-          Delete Account
-        </Button>
-      </div>
-    );
+    return [
+      <Button className="center" ripple raised onClick={() => this.signOut()}>
+        Sign Out
+      </Button>,
+      <Button
+        ripple
+        raised
+        onClick={() => this.currentUserDelete()}
+        className="center mdc-theme--secondary-bg"
+      >
+        Delete Account
+      </Button>,
+    ];
   }
 
   getInputEmailTemplate({ email }) {
     const disabled = !this.validateEmail(email);
+
     return (
       <div>
-        <Textfield label="Email" onInput={linkState(this, 'email')} />
+        <Textfield label="Email" type="email" autofocus onInput={linkState(this, 'email')} />
         <div class="buttons">
-          <Button type="previous" ripple onClick={() => this.changeView('loginOptions')}>
-            Previous
+          <Button
+            type="previous"
+            ripple
+            value={email}
+            onClick={() => this.changeView('login-options')}
+          >
+            Back
           </Button>
           <Button
             type="next"
             ripple
             raised
-            onClick={() => this.changeView('inputPassword')}
+            onClick={() => this.changeView('input-password')}
             disabled={disabled}
+            value={email}
           >
             Next
           </Button>
@@ -116,12 +142,19 @@ export default class FirebaseAuthentication extends Component {
 
   getInputPasswordTemplate({ password }) {
     const disabled = !this.validatePassword(password);
+
     return (
       <div>
-        <Textfield label="Password" type="password" onInput={linkState(this, 'password')} />
+        <Textfield
+          label="Password"
+          type="password"
+          autofocus
+          value={password}
+          onInput={linkState(this, 'password')}
+        />
         <div class="buttons">
-          <Button type="previous" ripple onClick={() => this.changeView('inputEmail')}>
-            Previous
+          <Button type="previous" ripple onClick={() => this.changeView('input-email')}>
+            Back
           </Button>
           <Button
             type="next"
@@ -131,6 +164,76 @@ export default class FirebaseAuthentication extends Component {
             disabled={disabled}
           >
             Next
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  getPromptRegisterTemplate({ email }) {
+    return (
+      <div>
+        <p>Account not found for {email}.</p>
+        <p>Would you like to register a new account?</p>
+        <div class="buttons">
+          <Button type="previous" ripple onClick={() => this.changeView('input-email')}>
+            Retry Password
+          </Button>
+          <Button type="next" raised ripple onClick={() => this.changeView('register-email')}>
+            Register
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  getRegisterEmailTemplate({ password, confirmation }) {
+    const disabled = !this.validateConfirmation(password, confirmation);
+
+    return (
+      <div>
+        <Textfield
+          label="Password"
+          type="password"
+          autofocus
+          value={password}
+          onInput={linkState(this, 'password')}
+        />
+        <Textfield
+          label="Confirm Password"
+          type="password"
+          autofocus
+          value={confirmation}
+          onInput={linkState(this, 'confirmation')}
+        />
+        <div class="buttons">
+          <Button type="previous" ripple onClick={() => this.changeView('input-password')}>
+            Back
+          </Button>
+          <Button
+            type="next"
+            ripple
+            raised
+            onClick={() => this.createUserWithEmailAndPassword()}
+            disabled={disabled}
+          >
+            Register
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  getEmailInUseTemplate({ email }) {
+    return (
+      <div>
+        <p>The password for {email} does not match our records.</p>
+        <div class="buttons">
+          <Button type="previous" ripple onClick={() => this.changeView('input-email')}>
+            Back
+          </Button>
+          <Button type="next" raised ripple autofocus onClick={() => this.sendPasswordResetEmail()}>
+            Reset Password
           </Button>
         </div>
       </div>
@@ -150,26 +253,49 @@ export default class FirebaseAuthentication extends Component {
   }
 
   // Functions
+  changeView(view) {
+    const viewThatNeedClearing = ['input-email', 'login-options'];
+    const updates = { view };
+    if (!!~viewThatNeedClearing.indexOf(view)) {
+      updates.password = null;
+      updates.confirmation = null;
+    }
+    this.setState({ view });
+  }
+
+  fire(type, detail) {
+    let e;
+    try {
+      e = new CustomEvent(type, { bubbles: true, detail });
+      dispatchEvent(e);
+    } catch (e) {
+      e = document.createEvent('CustomEvent');
+      e.initEvent(type, true, true, detail);
+      document.dispatchEvent(e);
+    }
+  }
+
+  handleError(error) {
+    this.fire('firebaseAuthenticationError', { error });
+  }
+
+  clearInputs() {
+    this.setState({ email: null, password: null, confirmation: null });
+  }
+
   signOut() {
     this.getFirebase()
       .auth()
       .signOut()
-      .catch(error => this.fire('error', { error }));
+      .catch(error => this.handleError(error));
   }
 
-  deleteAccount() {
-    this.state.currentUser
+  currentUserDelete() {
+    const { currentUser } = this.state;
+    currentUser
       .delete()
-      .then(() => this.fire('currentUserDeleted'))
-      .catch(error => this.fire('error', { error }));
-  }
-
-  changeView(view) {
-    this.setState(Object.assign({}, this.state, { view }));
-  }
-
-  fire(type, detail) {
-    dispatchEvent(new CustomEvent(type, { bubbles: true, detail }));
+      .then(() => this.fire('currentUserDeleted', { currentUser }))
+      .catch(error => this.handleError(error));
   }
 
   validateEmail(email) {
@@ -180,11 +306,51 @@ export default class FirebaseAuthentication extends Component {
     return password && password.length > 4;
   }
 
+  validateConfirmation(password, confirmation) {
+    return password == confirmation;
+  }
+
   signInWithEmailAndPassword() {
     const { email, password } = this.state;
-    this.getFirebase().auth().signInWithEmailAndPassword(email, password).catch(error => {
-      console.log('error', error);
-    })
+    this.getFirebase()
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .catch(error => {
+        if (error.code == 'auth/user-not-found') {
+          this.changeView('prompt-register');
+        } else if (error.code == 'auth/wrong-password') {
+          this.changeView('email-in-use');
+        }
+        this.handleError(error);
+      });
+  }
+
+  is;
+
+  createUserWithEmailAndPassword() {
+    const { email, password } = this.state;
+    this.getFirebase()
+      .auth()
+      .createUserWithEmailAndPassword(email, password)
+      .catch(error => {
+        if (error.code == 'auth/email-already-in-use') {
+          this.changeView('email-in-use');
+        }
+        this.handleError(error);
+      });
+  }
+
+  sendPasswordResetEmail() {
+    const { email } = this.state;
+    this.getFirebase()
+      .auth()
+      .sendPasswordResetEmail(email)
+      .then(() => {
+        this.fire('passwordResetSent', { email });
+        this.clearInputs();
+        this.changeView('input-email');
+      })
+      .catch(error => this.handleError(error));
   }
 
   // Getters
@@ -195,7 +361,7 @@ export default class FirebaseAuthentication extends Component {
   getLoginMethodsMap() {
     const firebase = this.getFirebase();
     return {
-      email: { text: 'Log In with Email', svg: emailSvg, view: 'inputEmail' },
+      email: { text: 'Log In with Email', svg: emailSvg, view: 'input-email' },
       phone: { text: 'Log in by Phone', svg: phoneSvg, view: 'inputPhone' },
       facebook: {
         text: 'Log in with Facebook',
