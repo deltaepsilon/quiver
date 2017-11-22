@@ -378,13 +378,13 @@ export default class FirebaseAuthentication extends Component {
   }
 
   changeView(view) {
-    const viewThatNeedClearing = ['input-email', 'login-options'];
     const updates = { view };
-    if (!!~viewThatNeedClearing.indexOf(view)) {
+    if (!!~['input-email', 'login-options'].indexOf(view)) {
       updates.password = null;
       updates.confirmation = null;
     }
     this.setState({ view });
+    this.fire('firebaseAuthenticationViewChanged', { view });
   }
 
   fire(type, detail) {
