@@ -130,8 +130,7 @@ export default class FirebaseAuthentication extends Component {
 
   getLoginMethods(props) {
     return Object.keys(props)
-      .map(x => props[x])
-      .filter(x => typeof x == 'string')
+      .filter(x => props[x] === true || typeof props[x] == 'string')
       .map(type => Object.assign({ type }, this.loginMethodsMap[type]));
   }
 

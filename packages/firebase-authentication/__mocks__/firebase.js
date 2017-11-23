@@ -1,26 +1,47 @@
-const auth = {
-  onAuthStateChanged: jest.fn(),
-  signOut: jest.fn(),
-  signInWithEmailAndPassword: jest.fn(),
-  createUserWithEmailAndPassword: jest.fn(),
-  sendPasswordResetEmail: jest.fn(),
-  signInWithPopup: jest.fn(),
-  signInWithRedirect: jest.fn(),
-};
+export default function() {
+  let currentUser = null;
+  class Auth {
+    set currentUser(x) {
+      currentUser = x;
+    }
 
-const firebase = {
-  mocks: {
-    auth,
-  },
+    get currentUser() {
+      return currentUser;
+    }
+  }
 
-  auth: () => {
-    return auth;
-  },
-};
+  Auth.prototype.onAuthStateChanged = jest.fn(cb => cb(currentUser));
+  Auth.prototype.signOut = jest.fn();
+  Auth.prototype.signInWithEmailAndPassword = jest.fn(() => Promise.resolve());
+  Auth.prototype.createUserWithEmailAndPassword = jest.fn(() => Promise.resolve());
+  Auth.prototype.sendPasswordResetEmail = jest.fn(() => Promise.resolve());
+  Auth.prototype.signInWithPopup = jest.fn(() => Promise.resolve());
+  Auth.prototype.signInWithRedirect = jest.fn(() => Promise.resolve());
 
-firebase.auth.FacebookAuthProvider = jest.fn();
-firebase.auth.GithubAuthProvider = jest.fn();
-firebase.auth.GoogleAuthProvider = jest.fn();
-firebase.auth.TwitterAuthProvider = jest.fn();
+  class Firebase {
+    constructor() {
+      this.mocks = {
+        auth: new Auth(),
+      };
+    }
 
-export default firebase;
+    set currentUser(x) {
+      this.mocks.auth.currentUser = x;
+    }
+
+    setAuthError(method, code) {
+      this.mocks.auth[method] = jest.fn(() => Promise.reject({ code }));
+    }
+
+    auth() {
+      return this.mocks.auth;
+    }
+  }
+
+  Firebase.prototype.auth.FacebookAuthProvider = jest.fn();
+  Firebase.prototype.auth.GithubAuthProvider = jest.fn();
+  Firebase.prototype.auth.GoogleAuthProvider = jest.fn();
+  Firebase.prototype.auth.TwitterAuthProvider = jest.fn();
+
+  return Firebase;
+}
