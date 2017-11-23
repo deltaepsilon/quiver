@@ -1,4 +1,4 @@
-export default function() {
+export default function Firebase() {
   let currentUser = null;
   class Auth {
     set currentUser(x) {
@@ -43,5 +43,5 @@ export default function() {
   Firebase.prototype.auth.GoogleAuthProvider = jest.fn();
   Firebase.prototype.auth.TwitterAuthProvider = jest.fn();
 
-  return Firebase;
+  return new Firebase();
 }

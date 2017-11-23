@@ -1,14 +1,11 @@
 import { h, render } from 'preact';
-import getFirebase from '../__mocks__/firebase';
+import Firebase from '../__mocks__/firebase';
 import Component from './index';
 import htmlLooksLike from 'html-looks-like';
-
-// configure(new Adapter());
 
 describe('FirebaseAuthentication', () => {
   let container, firebase;
   beforeEach(() => {
-    const Firebase = getFirebase();
     firebase = new Firebase();
     window.firebase = firebase;
     container = document.createElement('div');
