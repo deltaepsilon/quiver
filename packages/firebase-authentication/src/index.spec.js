@@ -1,11 +1,20 @@
-import { h } from 'preact';
-import { mount } from 'enzyme';
+import { h, render } from 'preact';
+import firebase from '../__mocks__/firebase';
 import Component from './index';
 
+// configure(new Adapter());
+
 describe('FirebaseAuthentication', () => {
-  it('Should render', done => {
-    const wrapper = <Component email/>;
-    console.log('wrapper', wrapper);
-    expect(wrapper).toEqual();
+  let container;
+  beforeEach(() => {
+    window.firebase = firebase;
+    container = document.createElement('div');
+    (document.body || document.documentElement).appendChild(container);
+    container.innerHTML = '';
+  });
+
+  it('Should render', () => {
+    render(<Component email />, container);
+    expect(container.innerHTML).toEqual('<div class="firebase-authentication"></div>');
   });
 });

@@ -1,5 +1,5 @@
 import './style.scss';
-import { Component } from 'preact';
+import { h, Component } from 'preact';
 import linkState from 'linkstate';
 import { validate } from 'email-validator';
 
