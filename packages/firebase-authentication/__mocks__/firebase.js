@@ -42,6 +42,7 @@ export default function Firebase() {
   Firebase.prototype.auth.GithubAuthProvider = jest.fn();
   Firebase.prototype.auth.GoogleAuthProvider = jest.fn();
   Firebase.prototype.auth.TwitterAuthProvider = jest.fn();
+  Firebase.prototype.auth.RecaptchaVerifier = jest.fn();
 
   return new Firebase();
 }

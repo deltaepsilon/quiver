@@ -65,10 +65,13 @@ describe('FirebaseAuthentication', () => {
 
   describe('Email flow', () => {
     const password = 'some fake password';
-
-    it('should allow email input', done => {
+    beforeEach(done => {
       render(<Component email />, container);
       enterEmail(done);
+    });
+
+    it('should allow email input and next should redirect to input-password view', () => {
+      testView('input-password');
     });
 
     it('should reject a bad password', done => {
@@ -100,13 +103,10 @@ describe('FirebaseAuthentication', () => {
 
     function testBadPassword({ error, view, done }) {
       firebase.setAuthError('signInWithEmailAndPassword', error);
-      render(<Component email />, container);
-      enterEmail(() => {
-        container.querySelector('input').value = password;
-        clickNext(() => {
-          testView(view);
-          done();
-        });
+      container.querySelector('input').value = password;
+      clickNext(() => {
+        testView(view);
+        done();
       });
     }
 
@@ -116,11 +116,55 @@ describe('FirebaseAuthentication', () => {
       setTimeout(() => {
         container.querySelector('input').value = 'chris@chrisesplin.com';
         clickNext(() => {
-          testView('input-password');
           done();
         });
       });
     }
+  });
+
+  describe('Phone Auth', () => {
+    beforeEach(() => {
+      render(<Component phone />, container);
+      container.querySelector('[type="phone"]').click();
+    });
+
+    // it.only('should #formatPhone', done => {
+    //   const input = container.querySelector('input');
+    //   input.value = '123';
+    //   setTimeout(() => {
+
+    //     console.log('container.innerHTML', container.innerHTML);
+    //     done();
+    //   });
+    // });
+  });
+
+  describe('formatPhone', () => {
+    let firebaseAuthentication;
+    beforeEach(() => {
+      firebaseAuthentication = new Component();
+    });
+
+
+
+    it.only('should format a string', () => {
+      const tests = [
+        ['+123', '+123'],
+        ['123 ', '+123 '],
+        ['  123 ', '+123 '],
+        ['  123 (', '+123 '],
+        ['123-', '+123 '],
+        ['1 801', '+1 801'],
+        ['1 123-456-789', '+1 123456789'],
+        ['1 123 456 789', '+1 123456789'],
+        ['1 123456789', '+1 123456789'],
+      ];
+
+      tests.forEach(([input, expected]) => {
+        expect(firebaseAuthentication.formatPhone(input)).toEqual(expected);
+      });
+    });
+
   });
 
   function clickNext(done) {

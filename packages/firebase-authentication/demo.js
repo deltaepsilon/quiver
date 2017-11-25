@@ -4,7 +4,7 @@ import 'preact-material-components/Card/style.css';
 import 'preact-material-components/Snackbar/style.css';
 import FirebaseAuthentication from './src';
 
-import { Component } from 'preact';
+import { h, Component } from 'preact';
 import './demo.css';
 
 export default class App extends Component {
