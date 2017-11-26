@@ -2,14 +2,19 @@ import './style.scss';
 import { h, Component } from 'preact';
 import linkState from 'linkstate';
 import { validate } from 'email-validator';
+import countryCodes from 'simple-country-dial-codes/country-calling-codes.json';
 
 // Material
 import Button from 'preact-material-components/Button';
 import Icon from 'preact-material-components/Icon';
 import Textfield from 'preact-material-components/Textfield';
+import Select from 'preact-material-components/Select';
 import 'preact-material-components/Button/style.css';
 import 'preact-material-components/Theme/style.css';
 import 'preact-material-components/Textfield/style.css';
+import 'preact-material-components/List/style.css';
+import 'preact-material-components/Menu/style.css';
+import 'preact-material-components/Select/style.css';
 
 // SVGs
 import emailSvg from '../assets/icons/email.svg';
@@ -84,6 +89,10 @@ export default class FirebaseAuthentication extends Component {
       this.clearInputs();
       this.fire('currentUserChanged', { currentUser });
     });
+
+    const callingCodeIndex = countryCodes.findIndex(x => x.code == 'US');
+    const { callingCode } = countryCodes[callingCodeIndex];
+    this.setState({ callingCode, callingCodeIndex });
   }
 
   componentDidUpdate() {
@@ -107,6 +116,9 @@ export default class FirebaseAuthentication extends Component {
         recaptchaVerifier.setAttribute('recaptcha-initialized', true);
         this.recaptchaVerifier = new this.firebase.auth.RecaptchaVerifier(recaptchaId, {
           size: 'invisible',
+          callback: response => {
+            console.log('response', response);
+          },
         });
       }
     }
@@ -339,19 +351,32 @@ export default class FirebaseAuthentication extends Component {
     );
   }
 
-  getInputPhoneTemplate({ phone }) {
+  getInputPhoneTemplate({ callingCode, callingCodeIndex, phone }) {
     const disabled = !this.validatePhone(phone);
-    const formattedPhone = this.formatPhone(phone);
+    const selectItems = countryCodes.map(({ name, callingCode }) => {
+      return (
+        <Select.Item>
+          {name} +{callingCode}
+        </Select.Item>
+      );
+    });
 
     return (
       <div>
         <div class="phone-number">
+          <Select
+            hintText="Country Code"
+            onChange={e => this.handleCountryCodeChange(e.selectedIndex)}
+            selectedIndex={callingCodeIndex}
+          >
+            {selectItems}
+          </Select>
           <Textfield
             label="Phone"
-            type="text"
+            type="number"
             autofocus
             onInput={linkState(this, 'phone')}
-            value={formattedPhone}
+            value={phone}
           />
         </div>
         <div class="buttons">
@@ -446,10 +471,10 @@ export default class FirebaseAuthentication extends Component {
   }
 
   signInWithPhoneNumber() {
-    const { phone } = this.state;
+    const { callingCode, phone } = this.state;
 
     this.auth
-      .signInWithPhoneNumber(phone, this.recaptchaVerifier)
+      .signInWithPhoneNumber(`+${callingCode} ${phone}`, this.recaptchaVerifier)
       .then(confirmationResult => {
         this.confirm = code => confirmationResult.confirm(code);
       })
@@ -500,19 +525,9 @@ export default class FirebaseAuthentication extends Component {
     this.setState({ email: null, password: null, confirmation: null });
   }
 
-  formatPhone(phone = '') {
-    const parts = phone.match(NUMBER_BLOCK) || [];
-    const lastCharacter = phone[phone.length - 1] || '';
-    const countryCode = parts.shift() || '';
-    let number = '';
-
-    if (parts.length) {
-      number = ' ' + parts.join('');
-    } else if (!lastCharacter.match(ANY_DIGIT)) {
-      number = ' ';
-    }
-
-    return `+${countryCode}${number}`;
+  handleCountryCodeChange(callingCodeIndex) {
+    const { callingCode } = countryCodes[callingCodeIndex];
+    this.setState({ callingCode, callingCodeIndex });
   }
 
   // Validation
@@ -520,8 +535,8 @@ export default class FirebaseAuthentication extends Component {
     return validate(email);
   }
 
-  validatePhone(phone) {
-    return phone && typeof parseInt(phone) == 'number' && phone.length >= 5;
+  validatePhone(number) {
+    return !!number && number.length >= 5;
   }
 
   validatePassword(password) {
