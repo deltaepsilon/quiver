@@ -18,7 +18,7 @@ export default class App extends Component {
       if (currentUser) {
         this.alert(`Account found: ${currentUser.email}`);
       } else {
-        this.alert('No account found');
+        // this.alert('No account found');
       }
     });
 
@@ -28,6 +28,10 @@ export default class App extends Component {
 
     addEventListener('passwordResetSent', e => {
       this.alert(`Reset email sent: ${e.detail.email}`);
+    });
+
+    addEventListener('phoneConfirmationSent', e => {
+      this.alert(`Phone confirmation sent to ${e.detail.phone}`);
     });
 
     addEventListener('firebaseAuthenticationError', e => {

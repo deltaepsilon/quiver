@@ -8,6 +8,17 @@
     max-width: 3rem;
   }
 
+  .phone-number {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    select {
+      margin: 25px 1rem 0 2px;
+      max-width: 4rem;
+    }
+  }
+
   .buttons {
     display: flex;
     justify-content: space-between;

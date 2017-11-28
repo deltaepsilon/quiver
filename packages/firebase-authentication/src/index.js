@@ -2,7 +2,6 @@ import './style.scss';
 import { h, Component } from 'preact';
 import linkState from 'linkstate';
 import { validate } from 'email-validator';
-import countryCodes from 'simple-country-dial-codes/country-calling-codes.json';
 
 // Material
 import Button from 'preact-material-components/Button';
@@ -23,6 +22,9 @@ import facebookSvg from '../assets/logos/facebook-logo.svg';
 import githubSvg from '../assets/logos/github-logo.svg';
 import googleSvg from '../assets/logos/google-logo.svg';
 import twitterSvg from '../assets/logos/twitter-logo.svg';
+
+// Constants
+import countryCodes from 'simple-country-dial-codes/country-calling-codes.json';
 
 const recaptchaId = 'recaptcha-verifier';
 const NUMBER_BLOCK = /\d+/g;
@@ -117,7 +119,7 @@ export default class FirebaseAuthentication extends Component {
         this.recaptchaVerifier = new this.firebase.auth.RecaptchaVerifier(recaptchaId, {
           size: 'invisible',
           callback: response => {
-            console.log('response', response);
+            // console.log('response', response);
           },
         });
       }
@@ -355,22 +357,26 @@ export default class FirebaseAuthentication extends Component {
     const disabled = !this.validatePhone(phone);
     const selectItems = countryCodes.map(({ name, callingCode }) => {
       return (
-        <Select.Item>
-          {name} +{callingCode}
-        </Select.Item>
+        <option value={callingCode}>
+          {callingCode} {name}
+        </option>
       );
     });
 
     return (
       <div>
         <div class="phone-number">
-          <Select
-            hintText="Country Code"
-            onChange={e => this.handleCountryCodeChange(e.selectedIndex)}
-            selectedIndex={callingCodeIndex}
-          >
-            {selectItems}
-          </Select>
+          <div>
+            <span>+</span>
+            <Select
+              hintText="Country Code"
+              basic
+              onChange={e => this.handleCountryCodeChange(e.target.selectedIndex)}
+              selectedIndex={callingCodeIndex}
+            >
+              {selectItems}
+            </Select>
+          </div>
           <Textfield
             label="Phone"
             type="number"
@@ -476,13 +482,18 @@ export default class FirebaseAuthentication extends Component {
     this.auth
       .signInWithPhoneNumber(`+${callingCode} ${phone}`, this.recaptchaVerifier)
       .then(confirmationResult => {
-        this.confirm = code => confirmationResult.confirm(code);
+        this.confirm = code => {
+          confirmationResult.confirm(code).catch(error => {
+            if (error.code == 'auth/invalid-verification-code') {
+              this.handleError(`Invalid verification code: ${code}`);
+            }
+            this.handleError(error);
+          });
+        };
+        this.fire('phoneConfirmationSent', { callingCode, phone });
+        this.changeView('confirm-phone');
       })
-      .catch(error => {
-        console.log('error', error);
-        this.handleError(error);
-      });
-    // this.changeView('confirm-phone');
+      .catch(error => this.handleError(error));
   }
 
   // Functions
