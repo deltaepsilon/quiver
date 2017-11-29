@@ -319,7 +319,7 @@ export default class FirebaseAuthentication extends Component {
           <Button type="previous" ripple onClick={() => this.changeView('input-email')}>
             Back
           </Button>
-          <Button type="next" ripple onClick={() => this.changeView('register-email')}>
+          <Button ripple onClick={() => this.changeView('register-email')}>
             Register
           </Button>
           <Button type="next" raised ripple autofocus onClick={() => this.sendPasswordResetEmail()}>
@@ -400,7 +400,6 @@ export default class FirebaseAuthentication extends Component {
             Send SMS
           </Button>
         </div>
-        {/* <div id={recaptchaId} style="display: flex; justify-content: center;" /> */}
       </div>
     );
   }
@@ -486,8 +485,9 @@ export default class FirebaseAuthentication extends Component {
           confirmationResult.confirm(code).catch(error => {
             if (error.code == 'auth/invalid-verification-code') {
               this.handleError(`Invalid verification code: ${code}`);
+            } else {
+              this.handleError(error);
             }
-            this.handleError(error);
           });
         };
         this.fire('phoneConfirmationSent', { callingCode, phone });

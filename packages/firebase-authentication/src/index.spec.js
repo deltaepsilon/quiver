@@ -11,9 +11,10 @@ describe('FirebaseAuthentication', () => {
     container = document.createElement('div');
     (document.body || document.documentElement).appendChild(container);
     container.innerHTML = '';
+    global.dispatchEvent = jest.fn();
   });
 
-  it('should render login-options', () => {
+  it('should render login-options', done => {
     render(<Component email />, container);
     htmlLooksLike(
       container.innerHTML,
@@ -23,6 +24,7 @@ describe('FirebaseAuthentication', () => {
       </div>
     `
     );
+    verifyEventType('currentUserChanged').then(done, done.fail);
   });
 
   it('should call signInWithPopup', () => {
@@ -32,12 +34,12 @@ describe('FirebaseAuthentication', () => {
     container.querySelector('[type="facebook"]').click();
     container.querySelector('[type="twitter"]').click();
     container.querySelector('[type="github"]').click();
-    expect(firebase.mocks.auth.signInWithPopup.mock.calls.length).toEqual(4);
+    expect(firebase.auth().signInWithPopup.mock.calls.length).toEqual(4);
   });
 
   describe('Logged-in view', () => {
     beforeEach(() => {
-      firebase.currentUser = { delete: jest.fn(Promise.resolve()) };
+      firebase.currentUser = { delete: jest.fn(() => Promise.resolve()) };
       render(<Component />, container);
     });
 
@@ -48,13 +50,14 @@ describe('FirebaseAuthentication', () => {
     it('should sign out', () => {
       const { signOut } = getButtons();
       signOut.click();
-      expect(firebase.mocks.auth.signOut.mock.calls.length).toEqual(1);
+      expect(firebase.auth().signOut.mock.calls.length).toEqual(1);
     });
 
-    it('should delete account', () => {
+    it('should delete account', done => {
       const { deleteAccount } = getButtons();
       deleteAccount.click();
-      expect(firebase.mocks.auth.currentUser.delete.mock.calls.length).toEqual(1);
+      expect(firebase.auth().currentUser.delete.mock.calls.length).toEqual(1);
+      verifyEventType('currentUserDeleted').then(done, done.fail);
     });
 
     function getButtons() {
@@ -64,6 +67,7 @@ describe('FirebaseAuthentication', () => {
   });
 
   describe('Email flow', () => {
+    const email = 'my fake email';
     const password = 'some fake password';
     beforeEach(done => {
       render(<Component email />, container);
@@ -75,11 +79,28 @@ describe('FirebaseAuthentication', () => {
     });
 
     it('should reject a bad password', done => {
-      testBadPassword({ error: 'auth/wrong-password', view: 'bad-password', done });
+      testBadPassword({ error: 'auth/wrong-password', view: 'bad-password' }).then(done, done.fail);
+    });
+
+    it('should send a password reset email', done => {
+      testBadPassword({
+        error: 'auth/wrong-password',
+        view: 'bad-password',
+        done: () => {},
+      })
+        .then(clickNext)
+        .then(() => {
+          expect(firebase.auth().sendPasswordResetEmail).toHaveBeenCalledWith(email);
+          return verifyEventType('passwordResetSent');
+        })
+        .then(done, done.fail);
     });
 
     it('should prompt to register', done => {
-      testBadPassword({ error: 'auth/user-not-found', view: 'prompt-register', done });
+      testBadPassword({ error: 'auth/user-not-found', view: 'prompt-register' }).then(
+        done,
+        done.fail
+      );
     });
 
     it('should attempt and fail at registration', done => {
@@ -88,25 +109,31 @@ describe('FirebaseAuthentication', () => {
       testBadPassword({
         error: 'auth/user-not-found',
         view: 'prompt-register',
-        done: () => {
-          clickNext(() => {
-            testView('register-email');
-            container.querySelectorAll('input')[1].value = password;
-            clickNext(() => {
-              testView('duplicate-account');
-              done();
-            });
-          });
-        },
-      });
+      })
+        .then(clickNext)
+        .then(() => {
+          testView('register-email');
+          const input = getInputs()[1];
+          return setInputValue(input, password);
+        })
+        .then(clickNext)
+        .then(() => {
+          testView('duplicate-account');
+          done();
+        })
+        .catch(done.fail);
     });
 
-    function testBadPassword({ error, view, done }) {
-      firebase.setAuthError('signInWithEmailAndPassword', error);
-      container.querySelector('input').value = password;
-      clickNext(() => {
-        testView(view);
-        done();
+    function testBadPassword({ error, view }) {
+      return new Promise(resolve => {
+        firebase.setAuthError('signInWithEmailAndPassword', error);
+        const [input] = getInputs();
+        setInputValue(input, password)
+          .then(clickNext)
+          .then(() => {
+            testView(view);
+            resolve();
+          });
       });
     }
 
@@ -114,10 +141,10 @@ describe('FirebaseAuthentication', () => {
       container.querySelector('[type="email"]').click();
 
       setTimeout(() => {
-        container.querySelector('input').value = 'chris@chrisesplin.com';
-        clickNext(() => {
-          done();
-        });
+        const [input] = getInputs();
+        return setInputValue(input, email)
+          .then(clickNext)
+          .then(done);
       });
     }
   });
@@ -128,53 +155,81 @@ describe('FirebaseAuthentication', () => {
       container.querySelector('[type="phone"]').click();
     });
 
-    // it.only('should #formatPhone', done => {
-    //   const input = container.querySelector('input');
-    //   input.value = '123';
-    //   setTimeout(() => {
-
-    //     console.log('container.innerHTML', container.innerHTML);
-    //     done();
-    //   });
-    // });
-  });
-
-  describe('formatPhone', () => {
-    let firebaseAuthentication;
-    beforeEach(() => {
-      firebaseAuthentication = new Component();
+    it('should input calling code and phone number', done => {
+      testPhoneNumberInputs(done);
     });
 
-
-
-    it.only('should format a string', () => {
-      const tests = [
-        ['+123', '+123'],
-        ['123 ', '+123 '],
-        ['  123 ', '+123 '],
-        ['  123 (', '+123 '],
-        ['123-', '+123 '],
-        ['1 801', '+1 801'],
-        ['1 123-456-789', '+1 123456789'],
-        ['1 123 456 789', '+1 123456789'],
-        ['1 123456789', '+1 123456789'],
-      ];
-
-      tests.forEach(([input, expected]) => {
-        expect(firebaseAuthentication.formatPhone(input)).toEqual(expected);
+    it('should sign in', done => {
+      firebase.setConfirmError('auth/invalid-verification-code');
+      testPhoneNumberInputs(() => {
+        const input = container.querySelector('input');
+        setInputValue(input, '123')
+          .then(clickNext)
+          .then(() => {
+            setTimeout(() => {
+              const errors = dispatchEvent.mock.calls.map(x => x[0]);
+              const confirmError = errors.find(x => x.type == 'firebaseAuthenticationError');
+              expect(firebase.confirm).toHaveBeenCalledWith('123');
+              expect(confirmError.detail.error).toEqual('Invalid verification code: 123');
+              done();
+            }, 1000);
+          });
       });
     });
 
+    function testPhoneNumberInputs(done) {
+      const select = container.querySelector('select');
+      const input = container.querySelector('input');
+      setSelectedIndex(select, 0);
+      setInputValue(input, '12345678');
+      clickNext()
+        .then(() => verifyEventType('phoneConfirmationSent'))
+        .then(() => {
+          expect(firebase.auth().signInWithPhoneNumber.mock.calls[0][0]).toEqual('+297 12345678');
+          done();
+        });
+    }
   });
 
-  function clickNext(done) {
-    container.querySelector('[type="next"]').click();
-    setTimeout(() => done());
+  function clickNext() {
+    return new Promise(resolve => {
+      container.querySelector('[type="next"]').click();
+      setTimeout(() => resolve());
+    });
   }
 
   function testView(expected) {
     expect(container.querySelector('.firebase-authentication').getAttribute('view')).toEqual(
       expected
     );
+  }
+
+  function verifyEventType(type, count = 1) {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        const matches = dispatchEvent.mock.calls.filter(x => x[0].type == type);
+        expect(matches.length).toEqual(count);
+        resolve();
+      });
+    });
+  }
+
+  function setSelectedIndex(el, selectedIndex) {
+    return new Promise(resolve => {
+      el.selectedIndex = selectedIndex;
+      el.dispatchEvent(new Event('change'));
+    });
+  }
+
+  function setInputValue(el, value) {
+    return new Promise(resolve => {
+      el.value = value;
+      el.dispatchEvent(new Event('input'));
+      resolve();
+    });
+  }
+
+  function getInputs() {
+    return container.querySelectorAll('input');
   }
 });

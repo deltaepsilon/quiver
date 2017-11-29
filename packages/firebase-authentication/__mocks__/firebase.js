@@ -9,7 +9,10 @@ export default function Firebase() {
       return currentUser;
     }
   }
-  const confirm = jest.fn();
+  let confirm = jest.fn(() => {
+    console.log('here');
+    Promise.resolve()
+  });
 
   Auth.prototype.onAuthStateChanged = jest.fn(cb => cb(currentUser));
   Auth.prototype.signOut = jest.fn();
@@ -19,30 +22,31 @@ export default function Firebase() {
   Auth.prototype.signInWithPopup = jest.fn(() => Promise.resolve());
   Auth.prototype.signInWithRedirect = jest.fn(() => Promise.resolve());
 
-  Auth.prototype.signInPhoneNumber = jest.fn(() => Promise.resolve({ confirm }));
+  Auth.prototype.signInWithPhoneNumber = jest.fn(() => Promise.resolve({ confirm }));
 
   class Firebase {
     constructor() {
-      this.mocks = {
-        auth: new Auth(),
-        confirm,
-      };
+      this.__auth = new Auth();
+    }
+
+    get confirm() {
+      return confirm;
     }
 
     set currentUser(x) {
-      this.mocks.auth.currentUser = x;
+      this.__auth.currentUser = x;
     }
 
     setAuthError(method, code) {
-      this.mocks.auth[method] = jest.fn(() => Promise.reject({ code }));
+      this.__auth[method] = jest.fn(() => Promise.reject({ code }));
     }
 
     auth() {
-      return this.mocks.auth;
+      return this.__auth;
     }
 
     setConfirmError(code) {
-      this.mocks.confirm = jest.fn(() => Promise.reject({ code }));
+      confirm = jest.fn(() => Promise.reject({ code }));
     }
   }
 
