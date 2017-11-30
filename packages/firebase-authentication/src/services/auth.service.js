@@ -1,4 +1,4 @@
-export default function AuthService({ fire, handleError, changeView, clearInputs }) {
+exports.AuthService = function AuthService({ fire, handleError, changeView, clearInputs }) {
   const firebase = window.firebase;
   const auth = firebase.auth();
 

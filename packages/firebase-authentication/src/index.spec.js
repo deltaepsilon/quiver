@@ -181,11 +181,11 @@ describe('FirebaseAuthentication', () => {
     function testPhoneNumberInputs(done) {
       const select = container.querySelector('select');
       const input = container.querySelector('input');
-      Promise.all([setSelectedIndex(select, 0), setInputValue(input, '12345678')])
+      Promise.all([setSelectedIndex(select, 4), setInputValue(input, '12345678')])
         .then(clickNext)
         .then(() => verifyEventType('phoneConfirmationSent'))
         .then(() => {
-          expect(firebase.auth().signInWithPhoneNumber.mock.calls[0][0]).toEqual('+297 12345678');
+          expect(firebase.auth().signInWithPhoneNumber.mock.calls[0][0]).toEqual('+27 12345678');
           done();
         });
     }
