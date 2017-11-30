@@ -38,10 +38,9 @@ export default class FirebaseAuthentication extends Component {
       'bad-password': (props, state) => this.badPasswordTemplate(state),
       'duplicate-account': (props, state) => this.duplicateAccountTemplate(state),
       'input-phone': (props, state) => {
-        const recaptchaVerifier = this.recaptchaVerifier;
         return this.inputPhoneTemplate({
           ...state,
-          recaptchaVerifier,
+          recaptchaVerifier: this.recaptchaVerifier,
           recaptchaId,
           sortedCountryCodes,
         });
