@@ -1,8 +1,0 @@
-{
-  "name": "@quiver/mdc-modules",
-  "version": "0.0.0",
-  "description": "Shared modules for MDC Components",
-  "main": "index.ts",
-  "author": "Chris Esplin <chris@quiver.is>",
-  "license": "MIT"
-}
