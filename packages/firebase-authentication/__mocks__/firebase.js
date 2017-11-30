@@ -9,10 +9,7 @@ export default function Firebase() {
       return currentUser;
     }
   }
-  let confirm = jest.fn(() => {
-    console.log('here');
-    Promise.resolve()
-  });
+  let confirm = jest.fn(() => Promise.resolve());
 
   Auth.prototype.onAuthStateChanged = jest.fn(cb => cb(currentUser));
   Auth.prototype.signOut = jest.fn();

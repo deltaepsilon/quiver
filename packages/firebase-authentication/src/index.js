@@ -30,40 +30,30 @@ const recaptchaId = 'recaptcha-verifier';
 const NUMBER_BLOCK = /\d+/g;
 const ANY_DIGIT = /\d/;
 
+// Services
+import AuthService from './auth.service';
+
 export default class FirebaseAuthentication extends Component {
   // Getters
-  get firebase() {
-    return window.firebase;
-  }
-
-  get auth() {
-    return this.firebase.auth();
-  }
-
   get loginMethodsMap() {
-    const auth = this.firebase.auth;
     return {
       email: { text: 'Log In with Email', svg: emailSvg, view: 'input-email' },
       phone: { text: 'Log in by Phone', svg: phoneSvg, view: 'input-phone' },
       facebook: {
         text: 'Log in with Facebook',
-        svg: facebookSvg,
-        provider: new auth.FacebookAuthProvider(),
+        svg: facebookSvg
       },
       github: {
         text: 'Log in with GitHub',
-        svg: githubSvg,
-        provider: new auth.GithubAuthProvider(),
+        svg: githubSvg
       },
       google: {
         text: 'Log in with Google',
         svg: googleSvg,
-        provider: new auth.GoogleAuthProvider(),
       },
       twitter: {
         text: 'Log in with Twitter',
         svg: twitterSvg,
-        provider: new auth.TwitterAuthProvider(),
       },
     };
   }
@@ -85,7 +75,14 @@ export default class FirebaseAuthentication extends Component {
 
   // Lifecycle
   componentWillMount() {
-    this.auth.onAuthStateChanged(currentUser => {
+    this.authService = new AuthService({
+      fire: this.fire.bind(this),
+      handleError: this.handleError.bind(this),
+      changeView: this.changeView.bind(this),
+      clearInputs: this.clearInputs.bind(this),
+    });
+
+    this.authService.onAuthStateChanged(currentUser => {
       const view = !!currentUser ? 'logged-in' : 'login-options';
       this.setState({ view, currentUser });
       this.clearInputs();
@@ -116,12 +113,7 @@ export default class FirebaseAuthentication extends Component {
     if (recaptchaVerifier) {
       if (!recaptchaVerifier.getAttribute('recaptcha-initialized')) {
         recaptchaVerifier.setAttribute('recaptcha-initialized', true);
-        this.recaptchaVerifier = new this.firebase.auth.RecaptchaVerifier(recaptchaId, {
-          size: 'invisible',
-          callback: response => {
-            // console.log('response', response);
-          },
-        });
+        this.recaptchaVerifier = this.authService.getRecaptchaVerifier(recaptchaId);
       }
     }
   }
@@ -179,13 +171,13 @@ export default class FirebaseAuthentication extends Component {
     return [
       <img class="profile-img" src={currentUser.photoURL} />,
       <p>{currentUser.email}</p>,
-      <Button className="center" ripple raised onClick={() => this.signOut()}>
+      <Button className="center" ripple raised onClick={() => this.authService.signOut()}>
         Sign Out
       </Button>,
       <Button
         ripple
         raised
-        onClick={() => this.currentUserDelete()}
+        onClick={() => this.authService.currentUserDelete(this.state)}
         className="center mdc-theme--secondary-bg"
       >
         Delete Account
@@ -243,7 +235,7 @@ export default class FirebaseAuthentication extends Component {
             type="next"
             ripple
             raised
-            onClick={() => this.signInWithEmailAndPassword()}
+            onClick={() => this.authService.signInWithEmailAndPassword(this.state)}
             disabled={disabled}
           >
             Next
@@ -297,7 +289,7 @@ export default class FirebaseAuthentication extends Component {
             type="next"
             ripple
             raised
-            onClick={() => this.createUserWithEmailAndPassword()}
+            onClick={() => this.authService.createUserWithEmailAndPassword(this.state)}
             disabled={disabled}
           >
             Register
@@ -322,7 +314,13 @@ export default class FirebaseAuthentication extends Component {
           <Button ripple onClick={() => this.changeView('register-email')}>
             Register
           </Button>
-          <Button type="next" raised ripple autofocus onClick={() => this.sendPasswordResetEmail()}>
+          <Button
+            type="next"
+            raised
+            ripple
+            autofocus
+            onClick={() => this.authService.sendPasswordResetEmail(this.state)}
+          >
             Reset
           </Button>
         </div>
@@ -354,6 +352,12 @@ export default class FirebaseAuthentication extends Component {
   }
 
   getInputPhoneTemplate({ callingCode, callingCodeIndex, phone }) {
+    const payload = {
+      callingCode,
+      phone,
+      recaptchaVerifier: this.recaptchaVerifier,
+      setConfirm: this.setConfirm.bind(this),
+    };
     const disabled = !this.validatePhone(phone);
     const selectItems = countryCodes.map(({ name, callingCode }) => {
       return (
@@ -394,7 +398,7 @@ export default class FirebaseAuthentication extends Component {
             type="next"
             ripple
             raised
-            onClick={() => this.signInWithPhoneNumber()}
+            onClick={() => this.authService.signInWithPhoneNumber(payload)}
             disabled={disabled}
           >
             Send SMS
@@ -428,82 +432,14 @@ export default class FirebaseAuthentication extends Component {
     );
   }
 
-  // Firebase Auth Methods
-  signOut() {
-    this.auth.signOut().catch(error => this.handleError(error));
-  }
-
-  currentUserDelete() {
-    const { currentUser } = this.state;
-    currentUser
-      .delete()
-      .then(() => this.fire('currentUserDeleted', { currentUser }))
-      .catch(error => this.handleError(error));
-  }
-
-  signInWithEmailAndPassword() {
-    const { email, password } = this.state;
-    this.auth.signInWithEmailAndPassword(email, password).catch(error => {
-      if (error.code == 'auth/user-not-found') {
-        this.changeView('prompt-register');
-      } else if (error.code == 'auth/wrong-password') {
-        this.changeView('bad-password');
-      }
-      this.handleError(error);
-    });
-  }
-
-  createUserWithEmailAndPassword() {
-    const { email, password } = this.state;
-    this.auth.createUserWithEmailAndPassword(email, password).catch(error => {
-      if (error.code == 'auth/email-already-in-use') {
-        this.changeView('duplicate-account');
-      }
-      this.handleError(error);
-    });
-  }
-
-  sendPasswordResetEmail() {
-    const { email } = this.state;
-    this.auth
-      .sendPasswordResetEmail(email)
-      .then(() => {
-        this.fire('passwordResetSent', { email });
-        this.clearInputs();
-        this.changeView('input-email');
-      })
-      .catch(error => this.handleError(error));
-  }
-
-  signInWithPhoneNumber() {
-    const { callingCode, phone } = this.state;
-
-    this.auth
-      .signInWithPhoneNumber(`+${callingCode} ${phone}`, this.recaptchaVerifier)
-      .then(confirmationResult => {
-        this.confirm = code => {
-          confirmationResult.confirm(code).catch(error => {
-            if (error.code == 'auth/invalid-verification-code') {
-              this.handleError(`Invalid verification code: ${code}`);
-            } else {
-              this.handleError(error);
-            }
-          });
-        };
-        this.fire('phoneConfirmationSent', { callingCode, phone });
-        this.changeView('confirm-phone');
-      })
-      .catch(error => this.handleError(error));
-  }
-
   // Functions
   selectLoginOption(type) {
-    const { provider, view } = this.loginMethodsMap[type];
+    const { view } = this.loginMethodsMap[type];
 
-    if (provider) {
-      this.auth.signInWithPopup(provider);
-    } else if (view) {
+    if (view) {
       this.changeView(view);
+    } else {
+      this.authService.signInWithPopup(type);
     }
   }
 
@@ -534,6 +470,10 @@ export default class FirebaseAuthentication extends Component {
 
   clearInputs() {
     this.setState({ email: null, password: null, confirmation: null });
+  }
+
+  setConfirm(confirm) {
+    this.confirm = confirm;
   }
 
   handleCountryCodeChange(callingCodeIndex) {
