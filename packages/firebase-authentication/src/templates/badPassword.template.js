@@ -11,6 +11,9 @@ exports.BadPasswordTemplate = ({ authService, changeView }) => state => {
         If an account exists under a different authentication provider, you may be able to
         register a new email/password account.
       </p>
+      <p>
+        Otherwise, click RESET to reset your password.
+      </p>
       <div class="buttons">
         <Button type="previous" ripple onClick={() => changeView('input-email')}>
           Back

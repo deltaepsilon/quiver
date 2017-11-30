@@ -1,1 +1,1 @@
-export * from './src/firebase-authentication.js';
+export * from './src';
