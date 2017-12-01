@@ -1,8 +1,12 @@
 {
+  "scripts": {
+    "lerna:bootstrap": "lerna bootstrap",
+    "lerna:publish": "lerna publish",
+    "lerna:updated": "lerna updated",
+    "lerna:link": "lerna link",
+    "lerna:add": "lerna add"
+  },
   "devDependencies": {
     "lerna": "^2.4.0"
-  },
-  "dependencies": {
-    "firebase": "^4.6.2"
   }
 }

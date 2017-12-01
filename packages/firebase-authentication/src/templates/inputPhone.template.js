@@ -8,60 +8,64 @@ function validatePhone(number) {
   return !!number && number.length >= 5;
 }
 
-exports.InputPhoneTemplate = ({
+function InputPhoneTemplate({
   firebaseAuthentication,
   authService,
   changeView,
   setConfirm,
   setCallingCodeIndex,
-}) => payload => {
-  const { callingCode, callingCodeIndex, phone, recaptchaId, sortedCountryCodes } = payload;
-  const disabled = !validatePhone(phone);
-  const selectItems = sortedCountryCodes.map(({ name, callingCode }) => {
+}) {
+  return payload => {
+    const { callingCode, callingCodeIndex, phone, recaptchaId, sortedCountryCodes } = payload;
+    const disabled = !validatePhone(phone);
+    const selectItems = sortedCountryCodes.map(({ name, callingCode }) => {
+      return (
+        <option value={callingCode}>
+          {callingCode} {name}
+        </option>
+      );
+    });
+
     return (
-      <option value={callingCode}>
-        {callingCode} {name}
-      </option>
-    );
-  });
-  
-  return (
-    <div>
-      <div class="phone-number">
-        <div>
-          <span>+</span>
-          <Select
-            hintText="Country Code"
-            basic
-            onChange={e => setCallingCodeIndex(e.target.selectedIndex)}
-            selectedIndex={callingCodeIndex}
-          >
-            {selectItems}
-          </Select>
+      <div>
+        <div class="phone-number">
+          <div>
+            <span>+</span>
+            <Select
+              hintText="Country Code"
+              basic
+              onChange={e => setCallingCodeIndex(e.target.selectedIndex)}
+              selectedIndex={callingCodeIndex}
+            >
+              {selectItems}
+            </Select>
+          </div>
+          <Textfield
+            label="Phone"
+            type="number"
+            autofocus
+            onInput={linkState(firebaseAuthentication, 'phone')}
+            value={phone}
+          />
         </div>
-        <Textfield
-          label="Phone"
-          type="number"
-          autofocus
-          onInput={linkState(firebaseAuthentication, 'phone')}
-          value={phone}
-        />
+        <div class="buttons">
+          <Button type="previous" ripple onClick={() => changeView('login-options')}>
+            Back
+          </Button>
+          <Button
+            id={recaptchaId}
+            type="next"
+            ripple
+            raised
+            onClick={() => authService.signInWithPhoneNumber({ setConfirm, ...payload })}
+            disabled={disabled}
+          >
+            Send SMS
+          </Button>
+        </div>
       </div>
-      <div class="buttons">
-        <Button type="previous" ripple onClick={() => changeView('login-options')}>
-          Back
-        </Button>
-        <Button
-          id={recaptchaId}
-          type="next"
-          ripple
-          raised
-          onClick={() => authService.signInWithPhoneNumber({setConfirm, ...payload})}
-          disabled={disabled}
-        >
-          Send SMS
-        </Button>
-      </div>
-    </div>
-  );
-};
+    );
+  };
+}
+
+export { InputPhoneTemplate };

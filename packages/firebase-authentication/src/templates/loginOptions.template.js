@@ -4,10 +4,10 @@ import Button from 'preact-material-components/Button';
 // SVGs
 import emailSvg from '../../assets/icons/email.svg';
 import phoneSvg from '../../assets/icons/call.svg';
-import facebookSvg from '../../assets/logos/facebook-logo.svg';
-import githubSvg from '../../assets/logos/github-logo.svg';
-import googleSvg from '../../assets/logos/google-logo.svg';
-import twitterSvg from '../../assets/logos/twitter-logo.svg';
+import facebookSvg from 'SuperTinyIcons/images/svg/facebook.svg';
+import githubSvg from 'SuperTinyIcons/images/svg/github.svg';
+import googleSvg from 'SuperTinyIcons/images/svg/google.svg';
+import twitterSvg from 'SuperTinyIcons/images/svg/twitter.svg';
 
 const loginMethodsMap = {
   email: { text: 'Log In with Email', svg: emailSvg, view: 'input-email' },
@@ -45,7 +45,7 @@ function getPropsKeys(props) {
     .filter(x => ~Object.keys(loginMethodsMap).indexOf(x));
 }
 
-exports.LoginOptionsTemplate = ({ authService, changeView }) => {
+function LoginOptionsTemplate({ authService, changeView }) {
   function selectLoginOption(type) {
     const { view } = loginMethodsMap[type];
 
@@ -67,4 +67,6 @@ exports.LoginOptionsTemplate = ({ authService, changeView }) => {
       );
     });
   };
-};
+}
+
+export { LoginOptionsTemplate };

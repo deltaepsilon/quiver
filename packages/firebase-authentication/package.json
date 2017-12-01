@@ -1,5 +1,4 @@
 {
-  "private": true,
   "name": "@quiver/firebase-authentication",
   "version": "0.0.0",
   "license": "MIT",
@@ -40,6 +39,7 @@
     "webpack": "3.7.0"
   },
   "dependencies": {
+    "SuperTinyIcons": "https://github.com/edent/SuperTinyIcons.git",
     "email-validator": "^1.1.1",
     "linkstate": "^1.1.0",
     "preact": "^8.2.1",
