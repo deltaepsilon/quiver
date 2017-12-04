@@ -94,6 +94,7 @@ exports.AuthService = function AuthService({ fire, handleError, changeView, clea
   }
 
   return {
+    onAuthStateChanged,
     signOut,
     currentUserDelete,
     signInWithEmailAndPassword,
@@ -103,6 +104,5 @@ exports.AuthService = function AuthService({ fire, handleError, changeView, clea
     signInWithPopup,
     signInWithRedirect,
     getRecaptchaVerifier,
-    onAuthStateChanged,
   };
-}
+};

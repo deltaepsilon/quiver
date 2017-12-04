@@ -2,8 +2,8 @@ import { h } from 'preact';
 import Button from 'preact-material-components/Button';
 
 // SVGs
-import emailSvg from '../../assets/icons/email.svg';
-import phoneSvg from '../../assets/icons/call.svg';
+import emailSvg from '../assets/icons/email.svg';
+import phoneSvg from '../assets/icons/call.svg';
 import facebookSvg from 'SuperTinyIcons/images/svg/facebook.svg';
 import githubSvg from 'SuperTinyIcons/images/svg/github.svg';
 import googleSvg from 'SuperTinyIcons/images/svg/google.svg';
