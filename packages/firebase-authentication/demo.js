@@ -56,12 +56,12 @@ export default class App extends Component {
     });
     return (
       <div class="demo">
-        {cards}
+        {/* {cards} */}
 
         <Card z="1" padding>
           <Card.Primary>
             <Card.Title>
-              <h2>Kitchen Sink</h2>
+              <h2>Firebase Auth Demo</h2>
             </Card.Title>
             <FirebaseAuthentication {...loginMethods} />
           </Card.Primary>
@@ -78,7 +78,7 @@ export default class App extends Component {
     alerts.add(message);
     this.setState({ alerts });
     this.showAlert();
-  }
+  }__
 
   showAlert(callCount = 0) {
     if (this.state.timer) {

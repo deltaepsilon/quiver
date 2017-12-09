@@ -17,6 +17,7 @@ exports.AuthService = function AuthService({ fire, handleError, changeView, clea
     return auth.signOut().catch(error => handleError(error));
   }
 
+  // window.firebase.auth().currentUser
   function currentUserDelete({ currentUser }) {
     return currentUser
       .delete()

@@ -52,7 +52,7 @@ function LoginOptionsTemplate({ authService, changeView }) {
     if (view) {
       changeView(view);
     } else {
-      authService.signInWithPopup(type);
+      authService.signInWithRedirect(type);
     }
   }
 

@@ -7,6 +7,7 @@
 		<meta name="mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<link rel="manifest" href="<%= htmlWebpackPlugin.files.publicPath %>manifest.json">
+		<link rel="shortcut icon" href="/assets/favicon.ico">
 		<% if (htmlWebpackPlugin.options.manifest.theme_color) { %>
 			<meta name="theme-color" content="<%= htmlWebpackPlugin.options.manifest.theme_color %>">
 		<% } %>
@@ -25,8 +26,8 @@
 		<%= htmlWebpackPlugin.options.ssr({
 			url: '/'
 		}) %>
-		<script src="https://quiver-four.firebaseapp.com/__/firebase/4.6.2/firebase-app.js"></script>
-		<script src="https://quiver-four.firebaseapp.com/__/firebase/4.6.2/firebase-auth.js"></script>
+		<script src="https://quiver-four.firebaseapp.com/__/firebase/4.7.0/firebase-app.js"></script>
+		<script src="https://quiver-four.firebaseapp.com/__/firebase/4.7.0/firebase-auth.js"></script>
 		<script>
 			// Initialize Firebase
 			var config = {
