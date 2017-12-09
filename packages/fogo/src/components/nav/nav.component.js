@@ -6,9 +6,7 @@ import { actions } from '../../datastore';
 import Toolbar from 'preact-material-components/Toolbar';
 import 'preact-material-components/Toolbar/style.css';
 
-export default connect('showMenu', actions)(({ showMenu, toggleMenu }) => {
-  console.log('style', style);
-  return (
+export default connect('showMenu', actions)(({ showMenu, toggleMenu }) => (
   <Toolbar className={style['mdc-toolbar']}>
     <Toolbar.Row>
       <Toolbar.Section align-start={true}>
@@ -19,4 +17,4 @@ export default connect('showMenu', actions)(({ showMenu, toggleMenu }) => {
       </Toolbar.Section>
     </Toolbar.Row>
   </Toolbar>
-)});
+));

@@ -18,14 +18,15 @@ import Toolbar from 'preact-material-components/Toolbar';
 import 'preact-material-components/Toolbar/style.css';
 
 export default class Fogo extends Component {
-  componentWillMount() {
-    window.firebase.auth().onAuthStateChanged(currentUser => {
-      const { currentUser: laggedCurrentUser } = store.getState();
-      store.setState({ laggedCurrentUser, currentUser });
-    });
+  get auth() {
+    return window.firebase.auth();
   }
 
-  render({ currentUser }) {
+  componentWillMount() {
+    this.registerOnAuthStateChanged();
+  }
+
+  render() {
     return (
       <Provider store={store}>
         <div>
@@ -44,6 +45,13 @@ export default class Fogo extends Component {
         </div>
       </Provider>
     );
+  }
+
+  registerOnAuthStateChanged() {
+    this.auth.onAuthStateChanged(currentUser => {
+      const { currentUser: laggedCurrentUser } = store.getState();
+      store.setState({ laggedCurrentUser, currentUser });
+    });
   }
 
   handlePath({ matches, path, url }) {
