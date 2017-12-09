@@ -28,6 +28,6 @@
     "preact-material-components": "^1.3.2",
     "preact-router": "^2.6.0",
     "sass-loader": "^6.0.6",
-    "unistore": "^2.3.0"
+    "unistore": "^2.4.0"
   }
 }
