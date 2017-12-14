@@ -106,7 +106,7 @@ export default class FirebaseAuthentication extends Component {
     if (view != autofocusView) {
       this.setState({ autofocusView: view });
       setTimeout(() => {
-        const autofocus = this.base.querySelector('[autofocus]');
+        const autofocus = this.base && this.base.querySelector('[autofocus]');
         if (autofocus) {
           autofocus.focus();
           if (typeof autofocus.select == 'function') {

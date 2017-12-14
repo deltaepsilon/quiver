@@ -1,5 +1,6 @@
 import { h } from 'preact';
 import GridList from 'preact-material-components/GridList';
+import attachmentSvg from '../assets/svg/attachment.svg'
 
 export default ({ file }) => {
   const { name, bytesTransferred, size, type, result, isImage } = file;
@@ -8,7 +9,7 @@ export default ({ file }) => {
   return (
     <GridList.Tile>
       <GridList.PrimaryTile>
-        <GridList.PrimaryContentTile src={(isImage && result) || 'assets/svg/attachment.svg'} />
+        <GridList.PrimaryContentTile src={(isImage && result) || attachmentSvg} />
         <div class="percentage" style={`width: ${percentage}%;`}></div>
       </GridList.PrimaryTile>
       <GridList.SecondaryTile>

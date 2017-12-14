@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs/Observable';
 
-exports.StorageService = function StorageService() {
+export function StorageService() {
   const firebase = window.firebase;
   const storage = firebase.storage();
 
