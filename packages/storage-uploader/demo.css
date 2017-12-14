@@ -1,0 +1,35 @@
+body {
+  font: 14px/1.21 'Helvetica Neue', arial, sans-serif;
+  font-weight: 400;
+  padding: 1rem;
+}
+
+h1 {
+	text-align: center;
+}
+
+.demo {
+  display: flex;
+  justify-content: center;
+  /* display: grid;
+  grid-gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); */
+}
+
+.demo > div {
+  max-width: 500px;
+}
+
+.mdc-elevation[padding] {
+	padding: 1rem;
+}
+
+.mdc-card {
+  justify-content: start;
+  max-width: calc(100% - 3rem);
+}
+
+.mdc-grid-list {
+  --mdc-theme-primary: rgba(0, 0, 0, .5);
+  --mdc-grid-list-tile-width: 20rem;
+}

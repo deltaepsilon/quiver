@@ -1,0 +1,22 @@
+.storage-uploader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+
+  .mdc-grid-list .mdc-grid-tile {
+    margin: .5rem 0;
+    padding: 0 .5rem;
+  }
+
+  .mdc-grid-list__tiles {
+    justify-content: center;
+  }
+
+}

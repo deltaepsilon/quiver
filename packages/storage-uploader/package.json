@@ -1,5 +1,5 @@
 {
-  "name": "@quiver/firebase-authentication",
+  "name": "@quiver/storage-uploader",
   "version": "0.0.0",
   "license": "MIT",
   "main": "./src/index.js",
@@ -39,13 +39,10 @@
     "webpack": "3.7.0"
   },
   "dependencies": {
-    "SuperTinyIcons": "https://github.com/edent/SuperTinyIcons.git",
-    "email-validator": "^1.1.1",
     "linkstate": "^1.1.0",
     "preact": "^8.2.1",
     "preact-compat": "^3.17.0",
-    "preact-material-components": "^1.2.4",
-    "simple-country-dial-codes": "https://github.com/xxxdepy/simple-country-dial-codes.git"
+    "preact-material-components": "^1.2.4"
   },
   "jest": {
     "setupFiles": [
