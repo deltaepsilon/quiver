@@ -9,7 +9,7 @@ export default ({ file }) => {
     <GridList.Tile>
       <GridList.PrimaryTile>
         <GridList.PrimaryContentTile src={(isImage && result) || 'assets/svg/attachment.svg'} />
-        <div class="percentage">{!!percentage && percentage + '%'}</div>
+        <div class="percentage" style={`width: ${percentage}%;`}></div>
       </GridList.PrimaryTile>
       <GridList.SecondaryTile>
         <GridList.TitleTile>{name}</GridList.TitleTile>

@@ -43,8 +43,7 @@ export default class App extends Component {
     alerts.add(message);
     this.setState({ alerts });
     this.showAlert();
-  }
-  __;
+  };
 
   showAlert(callCount = 0) {
     if (this.state.timer) {

@@ -29,10 +29,11 @@
 
   .percentage {
     position: absolute;
-    top: 1rem;
-    right: 1rem;
-    color: white;
+    top: 0;
+    left: 0;
+    background: forestgreen;
     z-index: 1;
+    height: .5rem;
   }
 
 }
