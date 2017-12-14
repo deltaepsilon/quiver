@@ -29,7 +29,11 @@ h1 {
   max-width: calc(100% - 3rem);
 }
 
+.storage-uploader {
+  min-width: 20rem;
+}
+
 .mdc-grid-list {
-  --mdc-theme-primary: rgba(0, 0, 0, .5);
+  --mdc-theme-primary: rgba(0, 0, 0, .8);
   --mdc-grid-list-tile-width: 20rem;
 }

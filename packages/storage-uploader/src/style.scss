@@ -11,12 +11,28 @@
   }
 
   .mdc-grid-list .mdc-grid-tile {
-    margin: .5rem 0;
-    padding: 0 .5rem;
+    margin: .5rem;
   }
 
   .mdc-grid-list__tiles {
     justify-content: center;
+  }
+
+  .mdc-grid-tile__primary-content {
+    display: block;
+    margin: auto;
+    width: inherit;
+    height: 180px;;
+    max-width: 100%;
+
+  }
+
+  .percentage {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    color: white;
+    z-index: 1;
   }
 
 }

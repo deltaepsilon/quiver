@@ -12,9 +12,9 @@ export default class App extends Component {
     this.setState({ alerts: new Set() });
   }
   componentDidMount() {
-    // addEventListener('currentUserDeleted', e => {
-    //   this.alert(`Account deleted: ${e.detail.currentUser.email}`);
-    // });
+    addEventListener('storageUploaderError', e => {
+      this.alert(`error: ${e.detail.error.message}`);
+    });
   }
 
   render() {
@@ -25,7 +25,10 @@ export default class App extends Component {
             <Card.Title>
               <h2>Firebase Storage Demo</h2>
             </Card.Title>
-            <StorageUploader />
+            <StorageUploader
+              mime-types="image/gif,image/jpeg,image/png"
+              folder="storage-uploader"
+            />
           </Card.Primary>
         </Card>
 
@@ -40,7 +43,8 @@ export default class App extends Component {
     alerts.add(message);
     this.setState({ alerts });
     this.showAlert();
-  }__
+  }
+  __;
 
   showAlert(callCount = 0) {
     if (this.state.timer) {

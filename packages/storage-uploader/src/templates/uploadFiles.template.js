@@ -3,12 +3,22 @@ import Button from 'preact-material-components/Button';
 import GridList from 'preact-material-components/GridList';
 import UploadTile from '../components/uploadTile.component';
 
-function UploadFilesTemplate({ changeView, setFiles }) {
-  return ({ files }) => {
+function UploadFilesTemplate({ fire, changeView, storageService }) {
+  return ({ folder }, { files }) => {
     const tiles = Array.from(files).map(file => <UploadTile file={file} />);
 
-    function handleButtonClick(e) {
-      console.log('files', files);
+    function handleButtonClick() {
+      storageService.upload(folder, files.map(x => x.source)).subscribe(
+        ({ file, task, snapshot }) => {
+          if (file || task) {
+            fire('storageUploaderTask', { file, task });
+          } else {
+            fire('storageUploaderSnapshot', { snapshot });
+          }
+        },
+        error => fire('storageUploaderError', { error }),
+        () => fire('storageUploaderComplete')
+      );
     }
 
     return (

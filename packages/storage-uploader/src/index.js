@@ -16,19 +16,21 @@ export default class FirebaseAuthentication extends Component {
   // Getters
   get templatesMap() {
     return {
-      'select-files': (props, state) => this.selectFilesTemplate(state),
-      'upload-files': (props, state) => this.uploadFilesTemplate(state),
+      'select-files': (props, state) => this.selectFilesTemplate(props),
+      'upload-files': (props, state) => this.uploadFilesTemplate(props, state),
     };
   }
 
   // Lifecycle
   componentWillMount() {
     this.initTemplates();
+    this.initListeners();
     this.changeView('select-files');
   }
 
   initTemplates() {
-    const storageUploader = this;
+    const storageService = StorageService();
+    const fire = this.fire.bind(this);
     const changeView = this.changeView.bind(this);
     const setFiles = this.setFiles.bind(this);
 
@@ -37,12 +39,19 @@ export default class FirebaseAuthentication extends Component {
         const func = templates[funcName];
         const instanceName = funcName[0].toLowerCase() + funcName.slice(1);
         this[instanceName] = func({
-          storageUploader,
+          storageService,
+          fire,
           changeView,
           setFiles,
         });
       }
     }
+  }
+
+  initListeners() {
+    addEventListener('storageUploaderSnapshot', e => this.handleSnapshot(e.detail.snapshot));
+    addEventListener('storageUploaderError', e => console.log('error', e.detail.error));
+    addEventListener('storageUploaderComplete', e => console.log('complete'));
   }
 
   // Render
@@ -58,9 +67,9 @@ export default class FirebaseAuthentication extends Component {
 
   // Functions
   changeView(view) {
-    // if (view == 'select-files') {
-    //   this.clearInput();
-    // }
+    if (view == 'select-files') {
+      this.clearInput();
+    }
 
     this.setState({ view });
     this.fire('storageUploaderViewChanged', { view });
@@ -68,13 +77,14 @@ export default class FirebaseAuthentication extends Component {
 
   setFiles(files) {
     return Promise.all(
-      Array.from(files).map(file => {
+      files.map(file => {
         return new Promise(resolve => {
           const reader = new FileReader();
           const { name, size, type } = file;
           reader.onload = ({ target }) => {
             const { result } = target;
-            resolve({ name, size, type, result, source: file });
+            const isImage = type.split('/')[0] == 'image';
+            resolve({ name, size, type, isImage, result, source: file });
           };
           reader.readAsDataURL(file);
         });
@@ -83,6 +93,10 @@ export default class FirebaseAuthentication extends Component {
       this.setState({ files });
       this.fire('storageUploaderFilesChanged', { files });
     });
+  }
+
+  updateFiles(files) {
+    this.setState({ files });
   }
 
   fire(type, detail) {
@@ -97,7 +111,17 @@ export default class FirebaseAuthentication extends Component {
   }
 
   handleError(error) {
-    this.fire('storageUploadersError', { error });
+    this.fire('storageUploaderError', { error });
+  }
+
+  handleSnapshot({ ref, bytesTransferred }) {
+    const files = this.state.files.map(file => {
+      if (file.name == ref.name) {
+        file.bytesTransferred = bytesTransferred;
+      }
+      return file;
+    });
+    this.setState({ files });
   }
 
   clearInput() {
