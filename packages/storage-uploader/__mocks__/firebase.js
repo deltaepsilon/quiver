@@ -2,7 +2,8 @@ export default function Firebase() {
   let functions;
   const task = {
     on: (eventName, snapshotFn, errorFn, completeFn) =>
-      (functions = { snapshotFn, errorFn, completeFn }),
+      (functions = { ...functions, snapshotFn, errorFn, completeFn }),
+    then: taskFn => ({ ...functions, taskFn }),
   };
 
   let file;

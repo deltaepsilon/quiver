@@ -27,7 +27,7 @@ function UploadFilesTemplate({ fire, changeView, storageService }) {
           <Button ripple back onClick={() => changeView('select-files')}>
             Back
           </Button>
-          <Button ripple raised onClick={handleButtonClick}>
+          <Button next ripple raised onClick={handleButtonClick}>
             Upload Files
           </Button>
         </div>

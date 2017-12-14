@@ -42,17 +42,50 @@ describe('FileUploader', () => {
   });
 
   describe('Select File', () => {
-    beforeEach(() => {
+    it('should respond to files', done => {
       render(<Component />, container);
+
+      inputFiles(files).then(e => {
+        expect(e.detail.files.length).toEqual(2);
+        done();
+      }, done.fail);
     });
 
-    it('should respond to files', done => {
-      inputFiles(files).then(done, done.fail);
+    it('should limit by mime-types', done => {
+      render(<Component mime-types="image/jpeg" />, container);
+
+      inputFiles(files).then(e => {
+        expect(e.detail.files.length).toEqual(1);
+        done();
+      }, done.fail);
     });
   });
 
   describe('Upload a file', () => {
-    
+    beforeEach(() => {
+      render(<Component />, container);
+    });
+
+    it.only('should upload', done => {
+      waitForView('upload-files').then(() => {
+        const nextButton = container.querySelector('[next]');
+        nextButton.click();
+        
+        const { snapshotFn, errorFn, completeFn } = firebase.storage().functions;
+        snapshotFn(1);
+        errorFn(2);
+        completeFn();
+
+        const details = dispatchEvent.mock.calls.map(([e]) => e.detail);
+        expect(details.length).toEqual(4);
+        expect(details[2].snapshot).toEqual(1);
+        expect(details[3].error).toEqual(2);
+
+        done();
+      });
+
+      inputFiles(files);
+    });
   });
 
   function inputFiles(files) {
@@ -62,14 +95,32 @@ describe('FileUploader', () => {
         value: files,
       });
 
-      global.dispatchEvent = e => {
+      const restore = proxyDispatchEvent(e => {
         if (e.type == 'storageUploaderFilesChanged') {
-          expect(e.detail.files.length).toEqual(2);
-          resolve();
+          restore();
+          resolve(e);
         }
-      };
+      });
 
       input.dispatchEvent(new CustomEvent('change'));
     });
+  }
+
+  function waitForView(view) {
+    return new Promise(resolve => {
+      const restore = proxyDispatchEvent(e => {
+        global.dispatchEvent = dispatchEvent;
+        if (e.detail.view == view) {
+          restore();
+          resolve(e);
+        }
+      });
+    });
+  }
+
+  function proxyDispatchEvent(fn) {
+    const dispatchEvent = global.dispatchEvent;
+    global.dispatchEvent = fn;
+    return () => (global.dispatchEvent = dispatchEvent);
   }
 });
