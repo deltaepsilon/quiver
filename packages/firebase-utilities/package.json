@@ -1,0 +1,8 @@
+{
+  "name": "@quiver/firebase-utilities",
+  "version": "0.0.0",
+  "description": "A shared collection of Firebase utilities",
+  "main": "index.js",
+  "author": "Chris Esplin <chris@chrisesplin.com>",
+  "license": "MIT"
+}

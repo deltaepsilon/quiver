@@ -66,7 +66,7 @@ describe('FileUploader', () => {
       render(<Component />, container);
     });
 
-    it.only('should upload', done => {
+    it('should upload', done => {
       waitForView('upload-files').then(() => {
         const nextButton = container.querySelector('[next]');
         nextButton.click();
