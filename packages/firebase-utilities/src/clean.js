@@ -1,7 +1,5 @@
-module.exports = function clean(
-  { ...obj },
-  { removeFunctions, removeEmptyObjects, removeEmptyStrings } = {}
-) {
+module.exports = function clean(incomingObject, { functions, objects, strings } = {}) {
+  const obj = Object.assign({}, incomingObject);
   var scrub = function(objA) {
     var keys = Object.keys(objA),
       i = keys.length;
@@ -10,11 +8,11 @@ module.exports = function clean(
       let value = objA[keys[i]];
       if (value == null || typeof value == 'undefined') {
         delete objA[keys[i]];
-      } else if (removeFunctions && typeof value == 'function') {
+      } else if (functions && typeof value == 'function') {
         delete objA[keys[i]];
-      } else if (removeEmptyStrings && value == '') {
+      } else if (strings && value === '') {
         delete objA[keys[i]];
-      } else if (removeEmptyObjects && typeof value == 'object' && Object.keys(value).length == 0) {
+      } else if (objects && typeof value == 'object' && Object.keys(value).length == 0) {
         delete objA[keys[i]];
       } else if (typeof value == 'object') {
         scrub(value);

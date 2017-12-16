@@ -4,5 +4,12 @@
   "description": "A shared collection of Firebase utilities",
   "main": "index.js",
   "author": "Chris Esplin <chris@chrisesplin.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "devDependencies": {
+    "jest": "^21.2.1"
+  }
 }
