@@ -1,0 +1,8 @@
+{
+  "name": "@quiver/cloud-functions",
+  "version": "0.0.0",
+  "description": "A collection of Cloud Functions",
+  "main": "index.js",
+  "author": "Chris Esplin <chris@chrisesplin.com>",
+  "license": "MIT"
+}
