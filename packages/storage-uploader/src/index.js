@@ -12,7 +12,7 @@ import { StorageService } from './services';
 // Templates
 import * as templates from './templates';
 
-export default class FirebaseAuthentication extends Component {
+export default class StorageUploader extends Component {
   // Getters
   get templatesMap() {
     return {
@@ -115,13 +115,15 @@ export default class FirebaseAuthentication extends Component {
   }
 
   handleSnapshot({ ref, bytesTransferred }) {
-    const files = this.state.files.map(file => {
-      if (file.name == ref.name) {
-        file.bytesTransferred = bytesTransferred;
-      }
-      return file;
-    });
-    this.setState({ files });
+    if (this.state.files) {
+      const files = this.state.files.map(file => {
+        if (file.name == ref.name) {
+          file.bytesTransferred = bytesTransferred;
+        }
+        return file;
+      });
+      this.setState({ files });
+    }
   }
 
   clearInput() {
