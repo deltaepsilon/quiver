@@ -1,6 +1,6 @@
 {
   "name": "@quiver/firebase-utilities",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A shared collection of Firebase utilities",
   "main": "index.js",
   "author": "Chris Esplin <chris@chrisesplin.com>",
