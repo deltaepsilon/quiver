@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import linkState from 'linkstate';
 import Button from 'preact-material-components/Button';
-import Textfield from 'preact-material-components/Textfield';
+import TextField from 'preact-material-components/TextField';
 
 function validatePassword(password) {
   return password && password.length > 4;
@@ -14,7 +14,7 @@ function InputPasswordTemplate({ firebaseAuthentication, authService, changeView
 
     return (
       <div>
-        <Textfield
+        <TextField
           label="Password"
           type="password"
           autofocus

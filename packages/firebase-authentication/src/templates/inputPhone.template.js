@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import linkState from 'linkstate';
 import Button from 'preact-material-components/Button';
-import Textfield from 'preact-material-components/Textfield';
+import TextField from 'preact-material-components/TextField';
 import Select from 'preact-material-components/Select';
 
 function validatePhone(number) {
@@ -40,7 +40,7 @@ function InputPhoneTemplate({
               {selectItems}
             </Select>
           </div>
-          <Textfield
+          <TextField
             label="Phone"
             type="number"
             autofocus

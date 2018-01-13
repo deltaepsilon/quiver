@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import linkState from 'linkstate';
 import Button from 'preact-material-components/Button';
-import Textfield from 'preact-material-components/Textfield';
+import TextField from 'preact-material-components/TextField';
 
 function validateCode(number) {
   return !!number && number.length == 6;
@@ -13,7 +13,7 @@ function ConfirmPhoneTemplate({ firebaseAuthentication, changeView }) {
 
     return (
       <div>
-        <Textfield
+        <TextField
           label="SMS Code"
           type="number"
           autofocus
