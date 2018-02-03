@@ -1,2 +1,2 @@
-import FirebaseAuthentication from './src';
+import FirebaseAuthentication from './dist';
 export default FirebaseAuthentication;

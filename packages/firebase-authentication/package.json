@@ -2,7 +2,11 @@
   "name": "@quiver/firebase-authentication",
   "version": "0.1.1",
   "license": "MIT",
-  "main": "./dist/index.js",
+  "main": "./index.js",
+  "files": [
+    "dist",
+    "index.js"
+  ],
   "scripts": {
     "start": "parcel src/index.html --hmr-port 34057",
     "demo": "parcel src/demo.html --hmr-port 34057",
@@ -13,7 +17,7 @@
     "extends": "eslint-config-synacor"
   },
   "eslintIgnore": [
-    "build/*"
+    "dist/*"
   ],
   "devDependencies": {
     "babel-core": "^6.26.0",
