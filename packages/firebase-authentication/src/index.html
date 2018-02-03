@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Firebase Authentication</title>
+</head>
+
+<body>
+  <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase-auth.js"></script>
+  <script src="__/firebase/init.js"></script>
+  <!-- <script src="custom-element.js"></script>
+
+  <firebase-authentication email phone google facebook twitter github></firebase-authentication> -->
+
+  <div id="root"></div>
+  <script src="index.js"></script>
+  <script>
+    renderFirebaseAuthentication(root, ["email", "phone", "google"]);
+  </script>
+</body>
+
+</html>

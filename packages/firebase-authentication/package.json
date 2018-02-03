@@ -2,13 +2,11 @@
   "name": "@quiver/firebase-authentication",
   "version": "0.0.3",
   "license": "MIT",
-  "main": "./src/index.js",
+  "main": "./dist/@quiver-firebase-authentication.js",
   "scripts": {
-    "start": "if-env NODE_ENV=production && npm run -s serve || npm run -s dev",
-    "build": "preact build --no-prerender --template template.html",
-    "serve": "preact build --no-prerender && preact serve",
-    "dev": "preact watch --template template.html --cwd .",
-    "lint": "eslint src",
+    "start": "parcel src/index.html --hmr-port 34057",
+    "demo": "parcel src/demo.html --hmr-port 34057",
+    "build": "rm -rf dist && parcel build src/firebase-authentication.js && parcel build src/custom-element.js && parcel build src/index.js",
     "test": "jest --watch"
   },
   "eslintConfig": {
@@ -20,9 +18,10 @@
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-jest": "^21.2.0",
-    "babel-plugin-fast-async": "^6.1.2",
     "babel-plugin-transform-object-assign": "^6.22.0",
+    "babel-preset-env": "^1.6.1",
     "babel-preset-es2015": "^6.24.1",
+    "babel-preset-preact": "^1.1.0",
     "babel-preset-stage-0": "^6.24.1",
     "chai": "^4.1.2",
     "eslint": "^4.5.0",
@@ -32,12 +31,12 @@
     "if-env": "^1.0.0",
     "jest": "^21.2.1",
     "node-sass": "^4.7.2",
-    "preact-cli": "^2.0.0",
-    "preact-compat-enzyme": "^0.2.5",
+    "parcel-bundler": "^1.5.1",
+    "preact-custom-element": "^2.0.0",
     "preact-jsx-chai": "^2.2.1",
     "preact-test-utils": "^0.1.3",
-    "sass-loader": "^6.0.6",
-    "webpack": "3.7.0"
+    "regenerator-runtime": "^0.11.1",
+    "sass-loader": "^6.0.6"
   },
   "dependencies": {
     "SuperTinyIcons": "https://github.com/edent/SuperTinyIcons.git",

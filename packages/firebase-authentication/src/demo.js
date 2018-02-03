@@ -1,13 +1,13 @@
+import { h, Component, render } from 'preact';
+import './demo.css';
 import Card from 'preact-material-components/Card';
 import Snackbar from 'preact-material-components/Snackbar';
 import 'preact-material-components/Card/style.css';
 import 'preact-material-components/Snackbar/style.css';
-import FirebaseAuthentication from './src';
 
-import { h, Component } from 'preact';
-import './demo.css';
+import FirebaseAuthentication from './firebase-authentication';
 
-export default class App extends Component {
+class App extends Component {
   componentWillMount() {
     this.setState({ alerts: new Set() });
   }
@@ -78,7 +78,7 @@ export default class App extends Component {
     alerts.add(message);
     this.setState({ alerts });
     this.showAlert();
-  }__
+  }
 
   showAlert(callCount = 0) {
     if (this.state.timer) {
@@ -104,3 +104,5 @@ export default class App extends Component {
     this.setState({ timer });
   }
 }
+
+render(<App />, root, root.lastChild);
